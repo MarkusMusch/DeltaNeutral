@@ -9,19 +9,21 @@ MOCK_CONFIG_PATH = "/path/to/config.ini"
 MOCK_BASE_ENDPOINT = "https://api.bybit.com"
 MOCK_ENDPOINT_FUNDING = "/funding"
 MOCK_ENDPOINT_OPEN_INTEREST = "/open_interest"
+MOCK_ENDPOINT_INTEREST = "/interest_rate"
 MOCK_API_KEY = "test_api_key"
 MOCK_API_SECRET = "test_api_secret"
 
 
 @pytest.fixture
 def mock_client():
-    with patch('db.api_client.configparser.ConfigParser') as mock_cp_class:
-        with patch('db.api_client.settings') as mock_settings:
+    with patch('backend.api_client.configparser.ConfigParser') as mock_cp_class:
+        with patch('backend.api_client.settings') as mock_settings:
 
             mock_settings.CONFIG_PATH = MOCK_CONFIG_PATH
             mock_settings.BASE_ENDPOINT_BYBIT = MOCK_BASE_ENDPOINT
             mock_settings.ENDPOINT_FUNDING_BYBIT = MOCK_ENDPOINT_FUNDING
             mock_settings.ENDPOINT_OPEN_INTEREST_BYBIT = MOCK_ENDPOINT_OPEN_INTEREST
+            mock_settings.ENDPOINT_INTNEREST_BYBIT = MOCK_ENDPOINT_INTEREST
  
             mock_cp = MagicMock()
             mock_cp.get.side_effect = lambda section, key: {
@@ -37,13 +39,13 @@ def mock_client():
 
 @pytest.fixture
 def mock_requests_get():
-    with patch('db.api_client.requests.get') as mock_get:
+    with patch('backend.api_client.requests.get') as mock_get:
         yield mock_get
 
 
 @pytest.fixture
 def mock_time():
-    with patch('db.api_client.time.time') as mock_time_func:
+    with patch('backend.api_client.time.time') as mock_time_func:
         mock_time_func.return_value = 1700000000.0  # Fixed timestamp
         yield mock_time_func
 
@@ -64,8 +66,8 @@ class TestByBitClient:
             self,
             mock_client
         ):
-        with patch('db.api_client.hmac.new') as mock_hmac:
-            with patch('db.api_client.hashlib.sha256') as mock_hashlib:
+        with patch('backend.api_client.hmac.new') as mock_hmac:
+            with patch('backend.api_client.hashlib.sha256') as mock_hashlib:
 
                 mock_hmac_instance = MagicMock()
                 mock_hmac_instance.hexdigest.return_value = MagicMock()
@@ -95,7 +97,7 @@ class TestByBitClient:
         mock_client,
         mock_requests_get
     ):
-        with patch('db.api_client.FundingHistoryResponse') as mock_funding_history_response:
+        with patch('backend.api_client.FundingHistoryResponse') as mock_funding_history_response:
             # Setup mock for requests.get
             mock_response = MagicMock()
             mock_response.json.return_value = {'result': {'category': 'test_category', 'list': []}}
@@ -126,7 +128,7 @@ class TestByBitClient:
         mock_client,
         mock_requests_get
     ):
-        with patch('db.api_client.FundingHistoryResponse') as mock_funding_history_response:
+        with patch('backend.api_client.FundingHistoryResponse') as mock_funding_history_response:
             # Setup mock for requests.get
             mock_response = MagicMock()
             mock_response.json.return_value = {'result': {'category': 'test_category', 'list': ['data1', 'data2']}}
@@ -159,7 +161,7 @@ class TestByBitClient:
         mock_client,
         mock_requests_get
     ):
-        with patch('db.api_client.OpenInterestResponse') as mock_open_interest_response:
+        with patch('backend.api_client.OpenInterestResponse') as mock_open_interest_response:
             # Setup mock for requests.get
             mock_response = MagicMock()
             mock_response.json.return_value = {'result': {'category': 'test_category', 'list': []}}
@@ -192,7 +194,7 @@ class TestByBitClient:
         mock_client,
         mock_requests_get
     ):
-        with patch('db.api_client.OpenInterestResponse') as mock_open_interest_response:
+        with patch('backend.api_client.OpenInterestResponse') as mock_open_interest_response:
             # Setup mock for requests.get
             mock_response = MagicMock()
             mock_response.json.return_value = {'result': {'category': 'test_category', 'list': ['data1', 'data2']}}
@@ -228,7 +230,7 @@ class TestByBitClient:
         mock_requests_get,
         mock_time
     ):
-        with patch('db.api_client.InterestRateResponse') as mock_interest_rate_response:
+        with patch('backend.api_client.InterestRateResponse') as mock_interest_rate_response:
             with patch.object(mock_client, '_sign_request', return_value=MagicMock()) as mock_sign:
 
                 # Setup mock for requests.get
@@ -240,7 +242,7 @@ class TestByBitClient:
                 result = mock_client.get_interest_rate("BTC", 1700000000000)
 
                 # Assert that requests.get was called with correct URL and params
-                expected_url = f"{MOCK_BASE_ENDPOINT}/v5/spot-margin-trade/interest-rate-history"
+                expected_url = MOCK_BASE_ENDPOINT + MOCK_ENDPOINT_INTEREST
                 expected_params = {
                     "api_key": MOCK_API_KEY,
                     "timestamp": 1700000000000,
@@ -261,7 +263,7 @@ class TestByBitClient:
         mock_requests_get,
         mock_time
     ):
-        with patch('db.api_client.InterestRateResponse') as mock_interest_rate_response:
+        with patch('backend.api_client.InterestRateResponse') as mock_interest_rate_response:
             with patch.object(mock_client, '_sign_request', return_value=MagicMock()) as mock_sign:
                 # Setup mock for requests.get
                 mock_response = MagicMock()
@@ -275,7 +277,7 @@ class TestByBitClient:
                 result = mock_client.get_interest_rate("ETH", 1700000000000)
 
                 # Assert that requests.get was called with correct URL and params
-                expected_url = f"{MOCK_BASE_ENDPOINT}/v5/spot-margin-trade/interest-rate-history"
+                expected_url = MOCK_BASE_ENDPOINT + MOCK_ENDPOINT_INTEREST
                 expected_params = {
                     "api_key": MOCK_API_KEY,
                     "timestamp": 1700000000000,

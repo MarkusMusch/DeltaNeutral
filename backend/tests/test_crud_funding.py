@@ -15,7 +15,7 @@ def test_create_funding_entries():
     funding_rate_record = FundingRate(symbol=Symbol.BTCUSDT, funding_rate="0.01", funding_rate_timestamp="1700000000000")
 
     # Step 2: Mock the session and methods using patch
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -34,7 +34,7 @@ def test_create_funding_entries_integrity_error():
     
 
     # Step 2: Mock the session and simulate an IntegrityError
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -58,7 +58,7 @@ def test_read_funding_entries_exact():
     ]
     
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -85,7 +85,7 @@ def test_read_funding_entries_fewer_records():
     ]
     
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -109,7 +109,7 @@ def test_read_funding_entries_no_records():
     mock_funding_rates = []
 
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -127,7 +127,7 @@ def test_read_funding_entries_no_records():
 # Test if the correct query was executed
 def test_read_funding_entries_query_execution():
 
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -151,7 +151,7 @@ def test_read_most_recent_update_funding():
     )
 
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -168,7 +168,7 @@ def test_read_most_recent_update_funding():
 # Test when there are no entries in the database
 def test_read_most_recent_update_funding_no_entries():
     # Step 1: Simulate no entries by returning None
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -183,7 +183,7 @@ def test_read_most_recent_update_funding_no_entries():
 # Test if the correct query was executed
 def test_read_most_recent_update_funding_query_execution():
 
-    with patch("db.crud.crud_funding.Session") as mock_session:
+    with patch("backend.crud.crud_funding.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 

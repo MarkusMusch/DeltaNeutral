@@ -15,7 +15,7 @@ def test_create_open_interest_entries():
     open_interest_record = OpenInterest(symbol=Symbol.BTCUSDT, open_interest="1000.50", open_interest_timestamp="1700000000000")
 
     # Step 2: Mock the session and methods using patch
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -33,7 +33,7 @@ def test_create_open_interest_entries_integrity_error():
     open_interest_record = OpenInterest(symbol=Symbol.BTCUSDT, open_interest="1000.50", open_interest_timestamp="1700000000000")
 
     # Step 2: Mock the session and simulate an IntegrityError
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -57,7 +57,7 @@ def test_read_open_interest_entries_exact():
     ]
     
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -84,7 +84,7 @@ def test_read_open_interest_entries_fewer_records():
     ]
     
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -108,7 +108,7 @@ def test_read_open_interest_entries_no_records():
     mock_open_interest = []
 
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -125,7 +125,7 @@ def test_read_open_interest_entries_no_records():
 
 # Test if the correct query was executed
 def test_read_open_interest_entries_query_execution():
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -149,7 +149,7 @@ def test_read_most_recent_update_open_interest():
     )
 
     # Step 2: Mock the session and query methods
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -167,7 +167,7 @@ def test_read_most_recent_update_open_interest():
 # Test when there are no entries in the database
 def test_read_most_recent_update_open_interest_no_entries():
     # Step 1: Simulate no entries by returning None
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -181,7 +181,7 @@ def test_read_most_recent_update_open_interest_no_entries():
 
 # Test if the correct query was executed
 def test_read_most_recent_update_open_interest_query_execution():
-    with patch("db.crud.crud_open_interest.Session") as mock_session:
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
