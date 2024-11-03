@@ -1,0 +1,35 @@
+/* dark_mode.css */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dash-spreadsheet-container, .dash-table-container, .dash-table, .dash-table-container .dash-spreadsheet, .dash-spreadsheet-inner {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.dash-select, .dash-slider, .dash-slider-tooltip {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.dash-dropdown .Select-control {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.dash-dropdown .Select-menu-outer {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+.dash-tabs .tab {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.dash-tabs .tab--selected {
+    background-color: #333;
+    color: #fff;
+}
