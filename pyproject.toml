@@ -4,7 +4,8 @@ version = "0.1.0"
 description = "A dashboard showing all relevant data of my trades"
 authors = ["Markus Musch <markus-musch@web.de>"]
 packages = [
-    { include = "db" }
+    { include = "backend" },
+    { include = "frontend" }
 ]
 
 [tool.poetry.dependencies]
@@ -25,6 +26,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 testpaths = [
-    "tests",
-    "db/tests"
+    "frontend/tests",
+    "backend/tests"
 ]
