@@ -2,7 +2,7 @@ from datetime import datetime
 
 import numpy as np
 import pytest
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from unittest.mock import patch, MagicMock
 
 from backend.models.models_orm import OpenInterest, Symbol
@@ -139,6 +139,47 @@ def test_read_open_interest_entries_query_execution():
         mock_db_session.query().filter_by().order_by().limit.assert_called_once_with(2)
 
 
+def test_read_open_interest_entries_sqlalchemy_error():
+    symbol = Symbol('BTCUSDT')
+
+    # Step 1: Mock the session and simulate a SQLAlchemyError
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
+        mock_db_session = MagicMock()
+        mock_session.return_value.__enter__.return_value = mock_db_session
+
+        # Simulate a SQLAlchemyError when querying the database
+        mock_db_session.query.side_effect = SQLAlchemyError("Database error")
+
+        # Step 2: Call the function to test
+        with pytest.raises(SQLAlchemyError) as exc_info:
+            read_open_interest_entries(symbol)
+
+        # Step 3: Verify that the error message is as expected
+        assert "Database error" in str(exc_info.value)
+
+
+# Test that unexpected exceptions are handled correctly
+def test_read_open_interest_entries_unexpected_error():
+    symbol = Symbol('BTCUSDT')  # Example symbol
+
+    # Step 1: Mock the session and simulate an unexpected error
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
+        mock_db_session = MagicMock()
+        mock_session.return_value.__enter__.return_value = mock_db_session
+
+        # Setup the mock query to simulate an unexpected exception
+        mock_query = MagicMock()
+        mock_db_session.query.return_value = mock_query
+        mock_query.filter_by.return_value.order_by.return_value.limit.return_value.all.side_effect = Exception("Unexpected error")
+
+        # Step 2: Call the function to test
+        with pytest.raises(Exception) as exc_info:
+            read_open_interest_entries(symbol)
+
+        # Step 3: Verify that the error message is as expected
+        assert "Unexpected error" in str(exc_info.value)
+
+
 # Test when there is a most recent entry
 def test_read_most_recent_update_open_interest():
     # Step 1: Mock an OpenInterest object with a timestamp
@@ -193,3 +234,43 @@ def test_read_most_recent_update_open_interest_query_execution():
         mock_db_session.query().filter_by.assert_called_once_with(symbol=Symbol.BTCUSDT.value)
         mock_db_session.query().filter_by().order_by.assert_called_once()
         mock_db_session.query().filter_by().order_by().first.assert_called_once()
+
+
+def test_read_most_recent_update_open_interest_sqlalchemy_error():
+    symbol = Symbol('BTCUSDT') 
+
+    # Step 1: Mock the session and simulate a SQLAlchemyError
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
+        mock_db_session = MagicMock()
+        mock_session.return_value.__enter__.return_value = mock_db_session
+
+        # Simulate a SQLAlchemyError when querying the database
+        mock_db_session.query.side_effect = SQLAlchemyError("Database error")
+
+        # Step 2: Call the function to test
+        with pytest.raises(SQLAlchemyError) as exc_info:
+            read_most_recent_update_open_interest(symbol)
+
+        # Step 3: Verify that the error message is as expected
+        assert "Database error" in str(exc_info.value)
+
+
+def test_read_most_recent_update_open_interest_unexpected_error():
+    symbol = Symbol('BTCUSDT')
+
+    # Step 1: Mock the session and simulate an unexpected error
+    with patch("backend.crud.crud_open_interest.Session") as mock_session:
+        mock_db_session = MagicMock()
+        mock_session.return_value.__enter__.return_value = mock_db_session
+
+        # Setup the mock query to simulate an unexpected exception
+        mock_query = MagicMock()
+        mock_db_session.query.return_value = mock_query
+        mock_query.filter_by.return_value.order_by.return_value.first.side_effect = Exception("Unexpected error")
+
+        # Step 2: Call the function to test
+        with pytest.raises(Exception) as exc_info:
+            read_most_recent_update_open_interest(symbol)
+
+        # Step 3: Verify that the error message is as expected
+        assert "Unexpected error" in str(exc_info.value)

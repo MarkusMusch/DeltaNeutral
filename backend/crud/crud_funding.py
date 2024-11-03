@@ -4,6 +4,7 @@ from typing import Optional, Tuple
 
 import numpy as np
 from sqlalchemy import desc
+from sqlalchemy.exc import SQLAlchemyError
 
 from backend.config import Session
 from backend.models.models_orm import FundingRate, Symbol
@@ -34,17 +35,24 @@ def read_funding_entries(symbol: Symbol, num_values: Optional[int] = None) -> Tu
     Returns:
         tuple: A tuple containing the timestamps and funding rate values.
     """
-    with Session() as session:
-        funding_rates = (session.query(FundingRate)
-                        .filter_by(symbol=symbol.value)
-                        .order_by(desc(FundingRate.funding_rate_timestamp))
-                        .limit(num_values)
-                        .all())
+    try:
+        with Session() as session:
+            funding_rates = (session.query(FundingRate)
+                            .filter_by(symbol=symbol.value)
+                            .order_by(desc(FundingRate.funding_rate_timestamp))
+                            .limit(num_values)
+                            .all())
 
-    timestamps = np.array([rate.funding_rate_timestamp for rate in funding_rates])[::-1]
-    funding_rates_values = np.array([float(rate.funding_rate) for rate in funding_rates])[::-1]
-    
-    return timestamps, funding_rates_values
+        timestamps = np.array([rate.funding_rate_timestamp for rate in funding_rates])[::-1]
+        funding_rates_values = np.array([float(rate.funding_rate) for rate in funding_rates])[::-1]
+        
+        return timestamps, funding_rates_values
+    except SQLAlchemyError as e:
+        print(f"Database error occurred while reading Funding Rate data: {e}")
+        raise
+    except Exception as e:
+        print(f"Unexpected error while reading Funding Rate data: {e}")
+        raise
 
 
 def read_most_recent_update_funding(symbol: Symbol) -> str:
@@ -56,12 +64,19 @@ def read_most_recent_update_funding(symbol: Symbol) -> str:
     Returns:
         str: The timestamp of the most recent funding rate update.
     """
-    with Session() as session:
-        latest_entry = (session.query(FundingRate)
-                            .filter_by(symbol=symbol.value)
-                            .order_by(desc(FundingRate.funding_rate_timestamp))
-                            .first())
-        
-    date_time = latest_entry.funding_rate_timestamp
+    try:
+        with Session() as session:
+            latest_entry = (session.query(FundingRate)
+                                .filter_by(symbol=symbol.value)
+                                .order_by(desc(FundingRate.funding_rate_timestamp))
+                                .first())
+            
+        date_time = latest_entry.funding_rate_timestamp
 
-    return date_time
+        return date_time
+    except SQLAlchemyError as e:
+        print(f"Database error occurred while reading the most recent Funding Rate data timestamp: {e}")
+        raise
+    except Exception as e:
+        print(f"Unexpected error while reading the most recent Funding Rate data timestamp: {e}")
+        raise

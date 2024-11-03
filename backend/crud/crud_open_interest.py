@@ -3,6 +3,7 @@ from typing import Optional, Tuple
 
 import numpy as np
 from sqlalchemy import desc
+from sqlalchemy.exc import SQLAlchemyError
 
 from backend.config import Session
 from backend.models.models_orm import OpenInterest, Symbol
@@ -33,17 +34,24 @@ def read_open_interest_entries(symbol: Symbol, num_values: Optional[int] = None)
     Returns:
         tuple: A tuple containing the timestamps and open interest values.
     """
-    with Session() as session:
-        open_interest = (session.query(OpenInterest)
-                         .filter_by(symbol=symbol.value)
-                         .order_by(desc(OpenInterest.open_interest_timestamp))
-                         .limit(num_values)
-                         .all())
+    try:
+        with Session() as session:
+            open_interest = (session.query(OpenInterest)
+                            .filter_by(symbol=symbol.value)
+                            .order_by(desc(OpenInterest.open_interest_timestamp))
+                            .limit(num_values)
+                            .all())
 
-    timestamps = np.array([rate.open_interest_timestamp for rate in open_interest])[::-1]
-    open_interest_values = np.array([float(rate.open_interest) for rate in open_interest])[::-1]
-    
-    return timestamps, open_interest_values
+        timestamps = np.array([rate.open_interest_timestamp for rate in open_interest])[::-1]
+        open_interest_values = np.array([float(rate.open_interest) for rate in open_interest])[::-1]
+        
+        return timestamps, open_interest_values
+    except SQLAlchemyError as e:
+        print(f"Database error occurred while reading Open Interest data: {e}")
+        raise
+    except Exception as e:
+        print(f"Unexpected error occured while reading Open Interest data: {e}")
+        raise
 
 
 def read_most_recent_update_open_interest(symbol: Symbol) -> str:
@@ -55,12 +63,19 @@ def read_most_recent_update_open_interest(symbol: Symbol) -> str:
     Returns:
         str: The timestamp of the most recent open interest update.
     """
-    with Session() as session:
-        latest_entry = (session.query(OpenInterest)
-                        .filter_by(symbol=symbol.value)
-                        .order_by(desc(OpenInterest.open_interest_timestamp))
-                        .first())
-        
-    date_time = latest_entry.open_interest_timestamp
+    try:
+        with Session() as session:
+            latest_entry = (session.query(OpenInterest)
+                            .filter_by(symbol=symbol.value)
+                            .order_by(desc(OpenInterest.open_interest_timestamp))
+                            .first())
+            
+        date_time = latest_entry.open_interest_timestamp
 
-    return date_time
+        return date_time
+    except SQLAlchemyError as e:
+        print(f"Database error occurred while reading the most recent update timestamp: {e}")
+        raise
+    except Exception as e:
+        print(f"Unexpected error while reading the most recent update timestamp: {e}")
+        raise
