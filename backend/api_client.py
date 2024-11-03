@@ -7,6 +7,7 @@ import configparser
 import hashlib
 import hmac
 import requests
+from requests.exceptions import RequestException
 import time
 
 from backend.models.models_api import (
@@ -54,9 +55,17 @@ class ByBitClient:
 
         Returns:
             str: The generated HMAC SHA256 signature.
+
+        Raises:
+            Exception: If an unexpected error occurs.
         """
-        param_str = '&'.join([f"{key}={value}" for key, value in sorted(params.items())])
-        return hmac.new(self.api_secret.encode('utf-8'), param_str.encode('utf-8'), hashlib.sha256).hexdigest()
+        try:
+            param_str = '&'.join([f"{key}={value}" for key, value in sorted(params.items())])
+            signature = hmac.new(self.api_secret.encode('utf-8'), param_str.encode('utf-8'), hashlib.sha256).hexdigest()
+            return signature
+        except Exception as e:
+            print(f"Unexpected error while signing request: {e}")
+            raise
 
     def get_interest_rate(self, currency: str, end_time: int) -> InterestRateResponse:
         """
@@ -68,6 +77,10 @@ class ByBitClient:
             
         Returns:
             InterestRateResponse: The interest rate history for the given currency.
+
+        Raises:
+            RequestException: If a network error occurs.
+            Exception: If an unexpected error occurs.
         """
         url = self.base_endpoint + self.endpoint_interest
 
@@ -81,18 +94,26 @@ class ByBitClient:
             "endTime": end_time
         }
 
-        signature = self._sign_request(params)
-        params['sign'] = signature
+        try:
+            signature = self._sign_request(params)
+            params['sign'] = signature
 
-        response = requests.get(url, params=params)
-        response_data = response.json()['result']
+            response = requests.get(url, params=params)
+            response_data = response.json()['result']
 
-        if response_data == '{}':
-            interestrate_history = InterestRateResponse(list=[])
-        else:
-            interestrate_history = InterestRateResponse(**response_data)
+            if response_data == '{}':
+                interestrate_history = InterestRateResponse(list=[])
+            else:
+                interestrate_history = InterestRateResponse(**response_data)
 
-        return interestrate_history
+            return interestrate_history
+
+        except RequestException as e:
+            print(f"Network error occurred while catching Interest Rate data: {e}")
+            raise
+        except Exception as e:
+            print(f"Unexpected error while catching Interest Rate data: {e}")
+            raise
 
     def get_funding_history(self, params: FundingRequest) -> FundingHistoryResponse:
         """
@@ -103,20 +124,33 @@ class ByBitClient:
 
         Returns:
             FundingHistoryResponse: The funding history for the given parameters.
+
+        Raises:
+            RequestException: If a network error occurs.
+            Exception: If an unexpected error occurs.
         """
         
         url = self.base_endpoint + self.endpoint_funding
+
+        try:
        
-        response = requests.get(url, params=params.dict())
-        response_data = response.json()['result']
+            response = requests.get(url, params=params.model_dump())
+            response_data = response.json()['result']
 
-        if not response_data['list']:
-            funding_history = FundingHistoryResponse(category=params.category,
-                                                     list=[])
-        else:
-            funding_history = FundingHistoryResponse(**response_data)
+            if not response_data['list']:
+                funding_history = FundingHistoryResponse(category=params.category,
+                                                        list=[])
+            else:
+                funding_history = FundingHistoryResponse(**response_data)
 
-        return funding_history
+            return funding_history
+
+        except RequestException as e:
+            print(f"Network error occurred while catching Funding data: {e}")
+            raise
+        except Exception as e:
+            print(f"Unexpected error while catching Funding data: {e}")
+            raise
     
     def get_open_interest(self, params: OpenInterestRequest) -> OpenInterestResponse:
         """
@@ -127,17 +161,29 @@ class ByBitClient:
 
         Returns:
             OpenInterestResponse: The open interest for the given parameters.
+        
+        Raises:
+            RequestException: If a network error occurs.
+            Exception: If an unexpected error occurs.
         """
 
         url = self.base_endpoint + self.endpoint_open_interest
 
-        response = requests.get(url, params=params.dict())
-        response_data = response.json()['result']
+        try:
+            response = requests.get(url, params=params.model_dump())
+            response_data = response.json()['result']
 
-        if not response_data['list']:
-            open_interest = OpenInterestResponse(category=params.category,
-                                                 list=[])
-        else:
-            open_interest = OpenInterestResponse(**response_data)
+            if not response_data['list']:
+                open_interest = OpenInterestResponse(category=params.category,
+                                                    list=[])
+            else:
+                open_interest = OpenInterestResponse(**response_data)
 
-        return open_interest
+            return open_interest
+        
+        except RequestException as e:
+            print(f"Network error occurred while catching Open Interest data: {e}")
+            raise
+        except Exception as e:
+            print(f"Unexpected error while catching Open Interest data: {e}")
+            raise

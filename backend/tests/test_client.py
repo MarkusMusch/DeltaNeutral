@@ -91,6 +91,25 @@ class TestByBitClient:
 
                 # Assert the signature
                 assert signature == mock_hmac_instance.hexdigest.return_value
+    
+    def test_sign_request_exception(self, mock_client):
+        # Set the api_secret to None to trigger an error during encoding
+        mock_client.api_secret = None
+
+        params = {'b': '2', 'a': '1'}
+
+        with pytest.raises(Exception) as exc_info:
+            mock_client._sign_request(params)
+
+        assert "'NoneType' object has no attribute 'encode'" in str(exc_info.value)
+
+        # Set the api_secret to a list while a dict is expected to trigger an error during encoding
+        params = ['b', 'a']
+
+        with pytest.raises(Exception) as exc_info:
+            mock_client._sign_request(params)
+
+        assert "'list' object has no attribute 'items'" in str(exc_info.value)
 
     def test_get_funding_history_empty_list(
         self,
@@ -155,6 +174,21 @@ class TestByBitClient:
             # Assert that FundingHistoryResponse was called with the response data
             mock_funding_history_response.assert_called_once_with(**{'category': 'test_category', 'list': ['data1', 'data2']})
             assert result == "FundingHistoryResponseInstance"
+    
+    def test_get_funding_rate_exceptions(self, mock_client):
+
+        with patch('backend.api_client.RequestException') as mock_request_exception:
+            mock_request_exception.side_effect = Exception("Test Error")
+            with pytest.raises(Exception) as exc_info:
+                mock_client.get_funding_history(
+                    FundingRequest(
+                        category="test_category",
+                        symbol="ETHUSD",
+                        endTime=1700000000000
+                    )
+                )
+        
+            assert 'catching classes that do not inherit from BaseException is not allowed' in str(exc_info.value)
 
     def test_get_open_interest_empty_list(
         self,
@@ -223,7 +257,24 @@ class TestByBitClient:
             # Assert that OpenInterestResponse was called with the response data
             mock_open_interest_response.assert_called_once_with(**{'category': 'test_category', 'list': ['data1', 'data2']})
             assert result == "OpenInterestResponseInstance"
+    
+    def test_get_open_interest_exceptions(self, mock_client):
 
+        with patch('backend.api_client.RequestException') as mock_request_exception:
+            mock_request_exception.side_effect = Exception("Test Error")
+            with pytest.raises(Exception) as exc_info:
+                mock_client.get_open_interest(
+                    OpenInterestRequest(
+                        category="test_category",
+                        symbol="ETHUSD",
+                        intervalTime="1h",
+                        endTime=1700000000000
+                    )
+                )
+        
+            assert 'catching classes that do not inherit from BaseException is not allowed' in str(exc_info.value)
+
+    
     def test_get_interest_rate_with_empty_result(
         self,
         mock_client,
@@ -291,3 +342,17 @@ class TestByBitClient:
                 # Assert that InterestRateResponse was called with the response data
                 mock_interest_rate_response.assert_called_once_with(**{'data': 'some_data'})
                 assert result == "InterestRateResponseInstance"
+    
+    def test_get_interest_rate_exceptions(self, mock_client):
+        with patch.object(mock_client, '_sign_request', side_effect=Exception("Test Error")) as mock_sign:
+            with pytest.raises(Exception) as exc_info:
+                mock_client.get_interest_rate("ETH", 1700000000000)
+
+            assert "Test Error" in str(exc_info.value)
+
+        with patch('backend.api_client.RequestException') as mock_request_exception:
+            mock_request_exception.side_effect = Exception("Test Error")
+            with pytest.raises(Exception) as exc_info:
+                mock_client.get_interest_rate("ETH", 1700000000000)
+
+            assert 'catching classes that do not inherit from BaseException is not allowed' in str(exc_info.value)
