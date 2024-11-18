@@ -4,7 +4,7 @@ from dash import dcc, html
 import dash_mantine_components as dmc
 
 from frontend.src.components.tabs.basis_trade import generate_tab_basis_trade
-from frontend.src.components.tabs.ethbtcusdt import carousel_ethbtcusdt
+from frontend.src.components.tabs.ethbtcusdt import generate_tab_ethbtcusdt
 from frontend.src.components.tabs.short import generate_tab_short
 
 
@@ -44,7 +44,7 @@ page_layout = html.Div(
                 dmc.TabsPanel(
                     id='tab-1',
                     value='tab-1',
-                    children=carousel_ethbtcusdt
+                    children=generate_tab_ethbtcusdt()
                 ),
                 dmc.TabsPanel(
                     id='tab-2',

@@ -1,3 +1,4 @@
+""" Main file to run the Dash app """
 from dash import Dash, _dash_renderer
 import dash_mantine_components as dmc
 from dash_mantine_components import MantineProvider

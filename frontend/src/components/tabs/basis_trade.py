@@ -9,7 +9,7 @@ from frontend.src.data_handling.data_handling_basis_trade import (
 )
 
 
-def generate_tab_basis_trade():
+def generate_tab_basis_trade() -> html.Div:
     """
     Generate the content for the Basis Trade tab.
 

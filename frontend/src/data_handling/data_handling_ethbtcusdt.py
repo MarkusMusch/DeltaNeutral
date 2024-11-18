@@ -11,7 +11,7 @@ from frontend.src.utils.styling import create_dark_mode_layout
 
 def generate_cumulative_arbitrage_graph() -> dcc.Graph:
     """ 
-    This function generates a graph that shows the cumulative return of the funding rate arbitrage strategy.
+    This function generates a graph that shows the cumulative return of the ETHBTCUSDT funding rate arbitrage strategy.
     
     Returns:
         dcc.Graph: A Dash graph object that shows the cumulative return of the funding rate arbitrage strategy.
@@ -36,18 +36,17 @@ def generate_cumulative_arbitrage_graph() -> dcc.Graph:
     cumulative_return_arbitrage = np.cumprod(1 + np.array(funding_rate_difference)) - 1
 
     return dcc.Graph(
-        id='funding-rate-difference-graph',
         config={"displayModeBar": False},
         figure={
             'data': [
                 go.Scatter(
                     x=timestamps_btc,
-                    y=25*100*cumulative_return_arbitrage,
+                    y=100*cumulative_return_arbitrage,
                     mode='lines',
                     name='Arbitrage Cumulative Return',
                 )
             ],
-            'layout': create_dark_mode_layout('Funding Rate Arbitrage Cummulative Return')
+            'layout': create_dark_mode_layout('ETHBTCUSDT Funding Rate Arbitrage Cummulative Return')
         }
     )
 
@@ -70,7 +69,6 @@ def generate_funding_rates_graph() -> dcc.Graph:
     timestamps_ethbtc, funding_rates_ethbtc = timestamps_ethbtc[-min_entries:], funding_rates_ethbtc[-min_entries:]
 
     return dcc.Graph(
-        id='funding-rate-graph',
         config={"displayModeBar": False},
         figure={
             'data': [
@@ -108,7 +106,6 @@ def generate_open_interest_graph() -> dcc.Graph:
     timestamps_oi_ethbtc, open_interest_ethbtc = read_open_interest_entries(Symbol.ETHBTCUSDT)
 
     return dcc.Graph(
-        id='open-interest-graph',
         config={"displayModeBar": False},
         figure={
             'data': [
@@ -155,7 +152,6 @@ def generate_cumulative_funding_rates_graph() -> dcc.Graph:
     cumulative_return_arbitrage = np.cumprod(1 + np.array(funding_rate_difference)) - 1
     
     return dcc.Graph(
-        id='cumulative-return-graph',
         config={"displayModeBar": False},
         figure={
             'data': [

@@ -11,9 +11,13 @@ from frontend.src.data_handling.data_handling_ethbtcusdt import (
 )
 
 
-# def generate_tab_ethbtcusdt():
-#    return 
-carousel_ethbtcusdt = html.Div(
+def generate_tab_ethbtcusdt() -> html.Div:
+    """ Generate the content for the ETHBTCUSDT tab.
+
+    Returns:
+        html.Div: The content for the ETHBTCUSDT tab.
+    """
+    return html.Div(
         children=[
             dmc.Carousel(
                 id='ethbtcusdt-carousel',

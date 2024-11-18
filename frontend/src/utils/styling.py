@@ -1,3 +1,4 @@
+""" This module contains functions that help with styling the plots. """
 import plotly.graph_objs as go
 
 
