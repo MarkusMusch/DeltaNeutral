@@ -1,8 +1,8 @@
 """ This module contains the Pydantic models for the API endpoints. """
+from datetime import datetime, timezone
+import numpy as np
 from pydantic import BaseModel
 from typing import List, Tuple
-import numpy as np
-from datetime import datetime
 
 
 class FundingRequest(BaseModel):
@@ -25,7 +25,7 @@ class FundingHistoryResponse(BaseModel):
     def unpacked_data(self) -> Tuple[np.ndarray, np.ndarray]:
         """Unpack the data from the response."""
         # Convert timestamps to datetime objects
-        timestamps = np.array([datetime.utcfromtimestamp(int(item.fundingRateTimestamp) / 1000) for item in self.list])[::-1]
+        timestamps = np.array([datetime.fromtimestamp(int(item.fundingRateTimestamp) / 1000, tz=timezone.utc) for item in self.list])[::-1]
         funding_rates = np.array([float(item.fundingRate) for item in self.list])[::-1]
         return timestamps, funding_rates
 
@@ -67,7 +67,7 @@ class InterestRateResponse(BaseModel):
     @property
     def unpacked_data(self) -> Tuple[np.ndarray, np.ndarray]:
         """Unpack the data from the response."""
-        datetimes = np.array([datetime.utcfromtimestamp(int(item.timestamp) / 1000) for item in self.list])[::-1]
+        datetimes = np.array([datetime.fromtimestamp(int(item.timestamp) / 1000, tz=timezone.utc) for item in self.list])[::-1]
         interest_rates = np.array([float(item.hourlyBorrowRate) for item in self.list])[::-1]
         return datetimes, interest_rates
     

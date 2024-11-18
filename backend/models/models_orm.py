@@ -1,5 +1,5 @@
 """ ORM models for the database. """
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 from sqlalchemy import Column, DateTime, Enum as SQLEnum, Float
@@ -32,7 +32,7 @@ class FundingRate(Base):
     def __init__(self, symbol: Symbol, funding_rate: str, funding_rate_timestamp: str) -> None:
         self.symbol = symbol
         self.funding_rate = float(funding_rate)
-        self.funding_rate_timestamp = datetime.utcfromtimestamp(int(funding_rate_timestamp) / 1000)
+        self.funding_rate_timestamp = datetime.fromtimestamp(int(funding_rate_timestamp) / 1000, tz=timezone.utc)
 
 
 class OpenInterest(Base):
@@ -46,7 +46,7 @@ class OpenInterest(Base):
     def __init__(self, symbol: Symbol, open_interest: str, open_interest_timestamp: str) -> None:
         self.symbol = symbol
         self.open_interest = float(open_interest)
-        self.open_interest_timestamp = datetime.utcfromtimestamp(int(open_interest_timestamp) / 1000)
+        self.open_interest_timestamp = datetime.fromtimestamp(int(open_interest_timestamp) / 1000, tz=timezone.utc)
 
 
 class InterestRate(Base):
@@ -60,4 +60,4 @@ class InterestRate(Base):
     def __init__(self, coin: Coin, interest_rate: str, interest_rate_timestamp: str) -> None:
         self.coin = coin 
         self.interest_rate = float(interest_rate)
-        self.interest_rate_timestamp = datetime.utcfromtimestamp(int(interest_rate_timestamp) / 1000)
+        self.interest_rate_timestamp = datetime.fromtimestamp(int(interest_rate_timestamp) / 1000, tz=timezone.utc)
