@@ -5,17 +5,19 @@ description = "A dashboard showing all relevant data of my trades"
 authors = ["Markus Musch <markus-musch@web.de>"]
 packages = [
     { include = "backend" },
-    { include = "frontend" }
+    { include = "frontend"}
 ]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-dash = "^2.18.0"
+dash = "^2.18.2"
 matplotlib = "^3.9.2"
 numpy = "^2.1.1"
 pydantic = "^2.9.0"
 requests = "^2.32.3"
 sqlalchemy = "^2.0.34"
+dash-mantine-components = "^0.14.7"
+dash-bootstrap-components = "^1.6.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
