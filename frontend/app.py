@@ -1,5 +1,5 @@
 """ Main file to run the Dash app """
-from dash import Dash, _dash_renderer
+from dash import callback, Dash, _dash_renderer, Input, Output, State 
 import dash_mantine_components as dmc
 from sqlalchemy import create_engine
 
@@ -24,19 +24,34 @@ for coin in Coin:
 
     catch_latest_interest(coin)
 
+
 _dash_renderer._set_react_version("18.2.0")
 app = Dash(__name__, external_stylesheets=[dmc.styles.CAROUSEL])
 
+
 app.layout = dmc.MantineProvider(
+    id="mantine-provider",
+    forceColorScheme='dark',
     children=[
         app_layout
-    ],
-    forceColorScheme='dark'
+    ]
 )
+
 
 register_callbacks_basis_trade(app)
 register_callbacks_basis_trade_leveraged(app)
 register_callbacks_ethbtcusdt(app)
+
+
+@app.callback(
+    Output("mantine-provider", "forceColorScheme"),
+    Input("color-scheme-toggle", "n_clicks"),
+    State("mantine-provider", "forceColorScheme"),
+    prevent_initial_call=True,
+)
+def switch_theme(_, theme):
+    return "dark" if theme == "light" else "light"
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
