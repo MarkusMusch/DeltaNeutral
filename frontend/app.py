@@ -1,13 +1,13 @@
 """ Main file to run the Dash app """
 from dash import Dash, _dash_renderer
 import dash_mantine_components as dmc
-from dash_mantine_components import MantineProvider
 from sqlalchemy import create_engine
 
 from backend.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
 from backend.models.models_orm import Base, Coin, Symbol
 from frontend.src.layouts.page_layout import app_layout
 from frontend.src.components.tabs.basis_trade import register_callbacks_basis_trade
+from frontend.src.components.tabs.basis_trade_leveraged import register_callbacks_basis_trade_leveraged
 from frontend.src.components.tabs.ethbtcusdt import register_callbacks_ethbtcusdt
 
 
@@ -27,9 +27,15 @@ for coin in Coin:
 _dash_renderer._set_react_version("18.2.0")
 app = Dash(__name__, external_stylesheets=[dmc.styles.CAROUSEL])
 
-app.layout = MantineProvider(app_layout)
+app.layout = dmc.MantineProvider(
+    children=[
+        app_layout
+    ],
+    forceColorScheme='dark'
+)
 
 register_callbacks_basis_trade(app)
+register_callbacks_basis_trade_leveraged(app)
 register_callbacks_ethbtcusdt(app)
 
 if __name__ == '__main__':

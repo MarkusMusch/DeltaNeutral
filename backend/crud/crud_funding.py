@@ -37,11 +37,13 @@ def read_funding_entries(symbol: Symbol, num_values: Optional[int] = None) -> Tu
     """
     try:
         with Session() as session:
-            funding_rates = (session.query(FundingRate)
-                            .filter_by(symbol=symbol.value)
-                            .order_by(desc(FundingRate.funding_rate_timestamp))
-                            .limit(num_values)
-                            .all())
+            funding_rates = (
+                session.query(FundingRate)
+                    .filter_by(symbol=symbol.value)
+                    .order_by(desc(FundingRate.funding_rate_timestamp))
+                    .limit(num_values)
+                    .all()
+            )
 
         timestamps = np.array([rate.funding_rate_timestamp for rate in funding_rates])[::-1]
         funding_rates_values = np.array([float(rate.funding_rate) for rate in funding_rates])[::-1]

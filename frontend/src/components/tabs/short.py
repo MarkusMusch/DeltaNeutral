@@ -15,5 +15,4 @@ def generate_tab_short() -> html.Div:
                 html.P(f'This page will show plots of the Short Trade', style={'color': 'white'})
             ], style={'padding': '20px', 'border': '1px solid #ddd', 'borderRadius': '4px', 'backgroundColor': '#222222'})
         ],
-        style={"backgroundColor": "#111111"}
     )

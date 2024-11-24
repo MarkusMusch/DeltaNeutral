@@ -157,7 +157,7 @@ def fill_open_interest(symbol: Symbol) -> None:
                 open_interest_record = OpenInterest(
                     symbol=symbol.value,
                     open_interest=item.openInterest,
-                    timestamp=item.timestamp
+                    open_interest_timestamp=item.timestamp
                 )
                 create_open_interest_entries(open_interest_record=open_interest_record)
             end_time = int(data.list[-1].timestamp) - 1

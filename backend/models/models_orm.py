@@ -13,6 +13,7 @@ class Symbol(str, Enum):
     """Enum for the trading symbols."""
     BTCUSDT = 'BTCUSDT'
     ETHUSDT = 'ETHUSDT'
+    SOLUSDT = 'SOLUSDT'
     ETHBTCUSDT = 'ETHBTCUSDT'
 
 
@@ -51,7 +52,7 @@ class OpenInterest(Base):
 
 class InterestRate(Base):
     """ORM model for the interest rates."""
-    __tablename__ = "interest_rates"
+    __tablename__ = 'interest_rates'
 
     coin = Column(SQLEnum(Coin), primary_key=True, nullable=False)
     interest_rate_timestamp = Column(DateTime, primary_key=True, nullable=False)

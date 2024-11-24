@@ -5,8 +5,8 @@ import plotly.graph_objs as go
 def create_dark_mode_layout(title):
     layout = go.Layout(
         title=title,
-        plot_bgcolor='rgba(17, 17, 17, 1)',   # Plot background
-        paper_bgcolor='rgba(17, 17, 17, 1)',  # Page background
+        plot_bgcolor='#242424',   # Plot background
+        paper_bgcolor='#242424',  # Page background
         font=dict(color='white'),             # Text color
         xaxis=dict(
             showgrid=True,
