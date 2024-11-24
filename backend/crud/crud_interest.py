@@ -1,5 +1,4 @@
 """ This module contains the CRUD operations for the InterestRate model. """
-
 from typing import Tuple
 
 import numpy as np

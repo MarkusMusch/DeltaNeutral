@@ -6,7 +6,6 @@ import plotly.graph_objs as go
 from backend.crud.crud_funding import read_funding_entries
 from backend.crud.crud_open_interest import read_open_interest_entries
 from backend.models.models_orm import Symbol
-from frontend.src.utils.styling import create_dark_mode_layout
 
 
 def generate_cumulative_arbitrage_graph() -> dcc.Graph:
@@ -37,6 +36,7 @@ def generate_cumulative_arbitrage_graph() -> dcc.Graph:
 
     return dcc.Graph(
         config={"displayModeBar": False},
+        style={"backgroundColor": "#111111"},
         figure={
             'data': [
                 go.Scatter(
@@ -45,8 +45,7 @@ def generate_cumulative_arbitrage_graph() -> dcc.Graph:
                     mode='lines',
                     name='Arbitrage Cumulative Return',
                 )
-            ],
-            'layout': create_dark_mode_layout('ETHBTCUSDT Funding Rate Arbitrage Cummulative Return')
+            ]
         }
     )
 
@@ -70,6 +69,7 @@ def generate_funding_rates_graph() -> dcc.Graph:
 
     return dcc.Graph(
         config={"displayModeBar": False},
+        style={"backgroundColor": "#111111"},
         figure={
             'data': [
                 go.Scatter(
@@ -90,8 +90,7 @@ def generate_funding_rates_graph() -> dcc.Graph:
                     mode='lines',
                     name='ETHBTCUSDT Funding Rate'
                 )
-            ],
-            'layout': create_dark_mode_layout(f'Funding Rate Over Time for ETH, BTC and ETHBTC')
+            ]
         }
     )
 
@@ -107,6 +106,7 @@ def generate_open_interest_graph() -> dcc.Graph:
 
     return dcc.Graph(
         config={"displayModeBar": False},
+        style={"backgroundColor": "#111111"},
         figure={
             'data': [
                 go.Scatter(
@@ -115,8 +115,7 @@ def generate_open_interest_graph() -> dcc.Graph:
                     mode='lines',
                     name='Open Interest ETHBTCUSDT'
                 )
-            ],
-            'layout': create_dark_mode_layout('Open Interest ETHBTCUSDT')
+            ]
         }
     )
 
@@ -153,6 +152,7 @@ def generate_cumulative_funding_rates_graph() -> dcc.Graph:
     
     return dcc.Graph(
         config={"displayModeBar": False},
+        style={"backgroundColor": "#111111"},
         figure={
             'data': [
                 go.Scatter(
@@ -179,7 +179,6 @@ def generate_cumulative_funding_rates_graph() -> dcc.Graph:
                     mode='lines',
                     name='Arbitrage Cumulative Return'
                 )
-            ],
-            'layout': create_dark_mode_layout('Cumulative Percentage Return on Funding Earned')
+            ]
         }
     )

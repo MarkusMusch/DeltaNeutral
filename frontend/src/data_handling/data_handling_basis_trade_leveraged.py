@@ -6,7 +6,6 @@ import plotly.graph_objs as go
 from backend.crud.crud_funding import read_funding_entries
 from backend.crud.crud_interest import read_interest_entries
 from backend.models.models_orm import Coin, Symbol
-from frontend.src.utils.styling import create_dark_mode_layout
 
 
 def generate_cumulative_funding_graph() -> dcc.Graph:
@@ -34,6 +33,7 @@ def generate_cumulative_funding_graph() -> dcc.Graph:
  
     return dcc.Graph(
         config={"displayModeBar": False},
+        style={"backgroundColor": "#111111"},
         figure={
             'data': [
                 go.Scatter(
@@ -54,8 +54,7 @@ def generate_cumulative_funding_graph() -> dcc.Graph:
                     mode='lines',
                     name='Cummulative Difference of Funding minus Interest',
                 )
-            ],
-            'layout': create_dark_mode_layout('Funding Rate and Stable Coin Interest Cummulative')
+            ]
         }
     )
 
@@ -85,6 +84,7 @@ def generate_funding_rates_graph() -> dcc.Graph:
 
     return dcc.Graph(
         config={"displayModeBar": False},
+        style={"backgroundColor": "#111111"},
         figure={
             'data': [
                 go.Scatter(
@@ -111,7 +111,6 @@ def generate_funding_rates_graph() -> dcc.Graph:
                     mode='lines',
                     name='Cummulative Difference of Funding minus Interest',
                 )
-            ],
-            'layout': create_dark_mode_layout('Funding Rates and Stable Coin Interest')
+            ]
         }
     )

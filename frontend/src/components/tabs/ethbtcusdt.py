@@ -59,7 +59,7 @@ def register_callbacks_ethbtcusdt(app):
         State('tab-3-store', 'data'),
         prevent_initial_call=True
     )
-    def handle_tab_switch_ethbtcusdt(children, data):
+    def handle_tab_switch_ethbtcusdt(_, data):
         """ 
         Handle the tab switch event for the ETHBTCUSDT tab.
         
@@ -134,7 +134,7 @@ def register_callbacks_ethbtcusdt(app):
         Input('ethbtcusdt-carousel-slide-1', 'children'),
         prevent_initial_call=True
     )
-    def update_ethbtcusdt_carousel_slide_2(children):
+    def update_ethbtcusdt_carousel_slide_2(_):
         """ If Slide 1 has been updated, load the graph for slide 2
 
         Args:
@@ -151,7 +151,7 @@ def register_callbacks_ethbtcusdt(app):
         Input('ethbtcusdt-carousel-slide-1', 'children'),
         prevent_initial_call=True
     )
-    def update_ethbtcusdt_carousel_slide_4(children):
+    def update_ethbtcusdt_carousel_slide_4(_):
         """ If Slide 1 has been updated, load the graph for slide 4
         
         Args:
@@ -169,7 +169,7 @@ def register_callbacks_ethbtcusdt(app):
         Input('ethbtcusdt-carousel-slide-4', 'children'),
         prevent_initial_call=True
     )
-    def update_ethbtcusdt_carousel_slide_3(children, children2):
+    def update_ethbtcusdt_carousel_slide_3(_, _2):
         """ If Slide 2 or Slide 4 has been updated, load the graph for slide 3 
         
         Args:
