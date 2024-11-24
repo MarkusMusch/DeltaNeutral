@@ -4,6 +4,7 @@ from dash import dcc, html
 import dash_mantine_components as dmc
 
 from frontend.src.components.tabs.basis_trade import generate_tab_basis_trade
+from frontend.src.components.tabs.basis_trade_leveraged import generate_tab_basis_trade_leveraged
 from frontend.src.components.tabs.ethbtcusdt import generate_tab_ethbtcusdt
 from frontend.src.components.tabs.short import generate_tab_short
 
@@ -11,7 +12,8 @@ from frontend.src.components.tabs.short import generate_tab_short
 class PageIds(Enum):
     TAB_ONE = 'page-one-tabs'
 
-page_layout = html.Div(
+
+page_layout = dmc.Box(
     children=[
         dmc.Tabs(
             id=PageIds.TAB_ONE.value,
@@ -25,7 +27,7 @@ page_layout = html.Div(
                         ),
                         dmc.TabsTab(
                             value='tab-1',
-                            children="Arbitrage ETHBTCUSDT",
+                            children='Basis Trade'
                         ),
                         dcc.Store(
                             id='tab-2-store',
@@ -33,10 +35,18 @@ page_layout = html.Div(
                         ),
                         dmc.TabsTab(
                             value='tab-2',
-                            children="Basis Trade",
+                            children="Basis Trade Leveraged",
+                        ),
+                        dcc.Store(
+                            id='tab-3-store',
+                            data={'active_carousel': 0}
                         ),
                         dmc.TabsTab(
                             value='tab-3',
+                            children="Arbitrage ETHBTCUSDT",
+                        ),
+                        dmc.TabsTab(
+                            value='tab-4',
                             children="Short",
                         )
                     ]
@@ -44,34 +54,39 @@ page_layout = html.Div(
                 dmc.TabsPanel(
                     id='tab-1',
                     value='tab-1',
-                    children=generate_tab_ethbtcusdt()
+                    children=generate_tab_basis_trade()
                 ),
                 dmc.TabsPanel(
                     id='tab-2',
                     value='tab-2',
-                    children=generate_tab_basis_trade()
+                    children=generate_tab_basis_trade_leveraged()
                 ),
                 dmc.TabsPanel(
                     id='tab-3',
                     value='tab-3',
+                    children=generate_tab_ethbtcusdt()
+                ),
+                dmc.TabsPanel(
+                    id='tab-4',
+                    value='tab-4',
                     children=generate_tab_short()
                 )
             ],
         )
     ],
-    style={"maxWidth": "1200px", "margin": "auto", "paddingTop": "50px"}
+    style={"maxWidth": "1600px", "margin": "auto"}
 )
 
 
 # Define the layout of the app
-app_layout = html.Div(
+app_layout = dmc.Box(
     children=[
-        html.Div(
+        dmc.Box(
             id='page-content',
             children=[
             page_layout
             ],
         )
     ],
-    style={"maxWidth": "1200px", "margin": "auto", "paddingTop": "50px"}
+    style={"paddingTop": "50px", "paddingLeft": "50px", "paddingRight": "50px"}
 )

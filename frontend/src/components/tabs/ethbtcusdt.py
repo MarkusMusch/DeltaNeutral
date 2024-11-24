@@ -44,7 +44,8 @@ def generate_tab_ethbtcusdt() -> html.Div:
                     )
                 ]
             )
-        ]
+        ],
+        style={"backgroundColor": "#111111"}
     )
 
 
@@ -54,8 +55,8 @@ def register_callbacks_ethbtcusdt(app):
         Output('ethbtcusdt-carousel-slide-2', 'children', allow_duplicate=True),
         Output('ethbtcusdt-carousel-slide-3', 'children', allow_duplicate=True),
         Output('ethbtcusdt-carousel-slide-4', 'children', allow_duplicate=True),
-        Input('tab-1', 'children'),
-        State('tab-1-store', 'data'),
+        Input('tab-3', 'children'),
+        State('tab-3-store', 'data'),
         prevent_initial_call=True
     )
     def handle_tab_switch_ethbtcusdt(children, data):
@@ -90,9 +91,9 @@ def register_callbacks_ethbtcusdt(app):
         Output('ethbtcusdt-carousel-slide-2', 'children', allow_duplicate=True),
         Output('ethbtcusdt-carousel-slide-3', 'children', allow_duplicate=True),
         Output('ethbtcusdt-carousel-slide-4', 'children', allow_duplicate=True),
-        Output('tab-1-store', 'data'),
+        Output('tab-3-store', 'data'),
         Input('ethbtcusdt-carousel', 'active'),
-        State('tab-1-store', 'data'),
+        State('tab-3-store', 'data'),
         prevent_initial_call=True
     )
     def update_ethbtcusdt(active, data):
