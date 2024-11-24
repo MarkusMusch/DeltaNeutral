@@ -1,5 +1,4 @@
 """ This module contains CRUD functions for the funding rate data. """
-
 from typing import Optional, Tuple
 
 import numpy as np
@@ -68,10 +67,12 @@ def read_most_recent_update_funding(symbol: Symbol) -> str:
     """
     try:
         with Session() as session:
-            latest_entry = (session.query(FundingRate)
-                                .filter_by(symbol=symbol.value)
-                                .order_by(desc(FundingRate.funding_rate_timestamp))
-                                .first())
+            latest_entry = (
+                session.query(FundingRate)
+                    .filter_by(symbol=symbol.value)
+                    .order_by(desc(FundingRate.funding_rate_timestamp))
+                    .first()
+            )
             
         date_time = latest_entry.funding_rate_timestamp
 

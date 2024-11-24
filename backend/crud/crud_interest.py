@@ -61,10 +61,12 @@ def read_most_recent_update_interest(coin: Coin) -> str:
     """
     try:
         with Session() as session:
-            latest_entry = (session.query(InterestRate)
-                                .filter_by(coin=coin.value)
-                                .order_by(desc(InterestRate.interest_rate_timestamp))
-                                .first())
+            latest_entry = (
+                session.query(InterestRate)
+                    .filter_by(coin=coin.value)
+                    .order_by(desc(InterestRate.interest_rate_timestamp))
+                    .first()
+            )
             
         date_time = latest_entry.interest_rate_timestamp
 
