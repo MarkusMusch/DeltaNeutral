@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 
 from backend.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
 from backend.models.models_orm import Base, Coin, Symbol
+# This is not explicitly used but needs to be imported to make the callabacks knwon to the app
 import frontend.src.callbacks.load_carousel_callback
 from frontend.src.components.components_id_tree import ComponentsIdTree
 from frontend.src.layouts.page_layout import app_layout
@@ -94,6 +95,7 @@ app.layout = dmc.MantineProvider(
     prevent_initial_call=True,
 )
 def switch_theme(_, theme):
+    """Switch the theme of the app."""
     return "dark" if theme == "light" else "light"
 
 

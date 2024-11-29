@@ -1,4 +1,5 @@
-from typing import Any, List, Tuple
+""" Callbacks for loading the content of the carousel in the basis trade and leveraged basis trade tabs. """
+from typing import List, Tuple
 
 from dash import callback, dcc, Input, MATCH, no_update, Output, State
 import dash_mantine_components as dmc

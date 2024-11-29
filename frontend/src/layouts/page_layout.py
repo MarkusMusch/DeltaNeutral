@@ -13,7 +13,14 @@ from frontend.src.components.tabs.tab_layout import generate_tab
 
 
 def generate_stores(ids: Enum) -> List[dcc.Store]:
-    """ """
+    """ Generate the stores for the page. 
+    
+    Args:
+        ids (Enum): The ids of the stores.
+
+    Returns:
+        List[dcc.Store]: The stores for the page.
+    """
     return [
         dcc.Store(
             id=store_id,
@@ -24,6 +31,9 @@ def generate_stores(ids: Enum) -> List[dcc.Store]:
 
 def generate_tabs(ids: Enum) -> List[dmc.TabsTab]:
     """Generate the tabs for the page.
+
+    Args:
+        ids (Enum): The ids of the tabs.
     
     Returns:
         List[dmc.TabsTab]: The tabs for the page.
@@ -36,8 +46,17 @@ def generate_tabs(ids: Enum) -> List[dmc.TabsTab]:
     ]
 
 
-def generate_panels(ids_panels: Enum, ids_carousels: Enum, fieldsets: List[dmc.Fieldset]) -> List[dmc.TabsPanel]:
+def generate_panels(
+    ids_panels: Enum,
+    ids_carousels: Enum,
+    fieldsets: List[dmc.Fieldset]
+) -> List[dmc.TabsPanel]:
     """Generate the panels for the page.
+
+    Args:
+        ids_panels (Enum): The ids of the panels.
+        ids_carousels (Enum): The ids of the carousels.
+        fieldsets (List[dmc.Fieldset]): The fieldsets for the panels.
 
     Returns:
         List[dmc.TabsPanel]: The panels for the page.

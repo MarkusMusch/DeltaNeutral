@@ -1,10 +1,8 @@
 """ This module contains functions that generate graphs for the funding rate and open interest of ETHBTCUSDT. """
 from typing import List, Union
 
-from dash import dcc
 import dash_mantine_components as dmc
 import numpy as np
-import plotly.graph_objs as go
 
 from backend.crud.crud_funding import read_funding_entries
 from backend.crud.crud_open_interest import read_open_interest_entries

@@ -1,5 +1,4 @@
-from typing import Union
-
+""" This module contains the components for the basis trade tab. """
 import dash_mantine_components as dmc
 
 from backend.models.models_orm import Symbol

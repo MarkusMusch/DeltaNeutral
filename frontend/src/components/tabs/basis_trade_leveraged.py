@@ -1,4 +1,4 @@
-""" This module contains the content and callbacks for the Basis Trade tab. """
+""" This module contains the components for the Basis Trade Leveraged tab. """
 import dash_mantine_components as dmc
 
 from backend.models.models_orm import Symbol

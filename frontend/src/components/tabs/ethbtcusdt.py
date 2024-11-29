@@ -1,5 +1,5 @@
 """ This module contains the layout and callbacks for the ETHBTCUSDT tab. """
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 from dash import callback, dcc, no_update
 from dash.dependencies import Input, Output, State

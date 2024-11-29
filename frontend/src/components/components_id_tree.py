@@ -1,3 +1,4 @@
+""" This module contains the ComponentsIdTree class, which is a tree-like structure that contains the id's of the components in the frontend. """
 from enum import Enum
 
 
