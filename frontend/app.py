@@ -6,8 +6,9 @@ from sqlalchemy import create_engine
 
 from backend.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
 from backend.models.models_orm import Base, Coin, Symbol
+import frontend.src.callbacks.load_carousel_callback
+from frontend.src.components.components_id_tree import ComponentsIdTree
 from frontend.src.layouts.page_layout import app_layout
-from frontend.src.components.tabs.ethbtcusdt import register_callbacks_ethbtcusdt
 
 
 engine = create_engine('sqlite:///funding_history.db')
@@ -29,7 +30,7 @@ app = Dash(__name__, external_stylesheets=[dmc.styles.CAROUSEL])
 
 
 theme_toggle = dmc.ActionIcon(
-    id="color-scheme-toggle",
+    id=ComponentsIdTree.AppShellHeader.COLOR_THEME_TOGGLE,
     variant="transparent",
     color="yellow",
     size="lg",
@@ -42,7 +43,7 @@ theme_toggle = dmc.ActionIcon(
 
 
 app.layout = dmc.MantineProvider(
-    id="mantine-provider",
+    id=ComponentsIdTree.App.MANTINE_PROVIDER,
     forceColorScheme='dark',
     children=[
         dmc.AppShell(
@@ -86,13 +87,10 @@ app.layout = dmc.MantineProvider(
 )
 
 
-register_callbacks_ethbtcusdt(app)
-
-
 @callback(
-    Output("mantine-provider", "forceColorScheme"),
-    Input("color-scheme-toggle", "n_clicks"),
-    State("mantine-provider", "forceColorScheme"),
+    Output(ComponentsIdTree.App.MANTINE_PROVIDER, "forceColorScheme"),
+    Input(ComponentsIdTree.AppShellHeader.COLOR_THEME_TOGGLE, "n_clicks"),
+    State(ComponentsIdTree.App.MANTINE_PROVIDER, "forceColorScheme"),
     prevent_initial_call=True,
 )
 def switch_theme(_, theme):
