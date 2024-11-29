@@ -1,66 +1,91 @@
 """ This module contains the layout of the page. """
 from enum import Enum
+from typing import List
 
 from dash import dcc
 import dash_mantine_components as dmc
 
-from frontend.src.components.tabs.basis_trade import generate_tab_basis_trade
-from frontend.src.components.tabs.basis_trade_leveraged import generate_tab_basis_trade_leveraged
-from frontend.src.components.tabs.ethbtcusdt import generate_tab_ethbtcusdt
+from frontend.src.components.components_id_tree import ComponentsIdTree
+from frontend.src.components.tabs.basis_trade import fieldset_basis_trade
+from frontend.src.components.tabs.basis_trade_leveraged import fieldset_basis_trade_leveraged
+from frontend.src.components.tabs.ethbtcusdt import fieldset_ethbtcusdt
+from frontend.src.components.tabs.tab_layout import generate_tab
 
 
-class PageIds(Enum):
-    TAB_ONE = 'page-one-tabs'
+def generate_stores(ids: Enum) -> List[dcc.Store]:
+    """ Generate the stores for the page. 
+    
+    Args:
+        ids (Enum): The ids of the stores.
+
+    Returns:
+        List[dcc.Store]: The stores for the page.
+    """
+    return [
+        dcc.Store(
+            id=store_id,
+            data={'active_carousel': 0}
+        ) for store_id in ids
+    ]
+
+
+def generate_tabs(ids: Enum) -> List[dmc.TabsTab]:
+    """Generate the tabs for the page.
+
+    Args:
+        ids (Enum): The ids of the tabs.
+    
+    Returns:
+        List[dmc.TabsTab]: The tabs for the page.
+    """
+    return [
+        dmc.TabsTab(
+            value=panel_id,
+            children=panel_id
+        ) for panel_id in ids
+    ]
+
+
+def generate_panels(
+    ids_panels: Enum,
+    ids_carousels: Enum,
+    fieldsets: List[dmc.Fieldset]
+) -> List[dmc.TabsPanel]:
+    """Generate the panels for the page.
+
+    Args:
+        ids_panels (Enum): The ids of the panels.
+        ids_carousels (Enum): The ids of the carousels.
+        fieldsets (List[dmc.Fieldset]): The fieldsets for the panels.
+
+    Returns:
+        List[dmc.TabsPanel]: The panels for the page.
+    """
+    return [
+        dmc.TabsPanel(
+            id=panel_id,
+            value=panel_id,
+            children=generate_tab(carousel_id, fieldset)
+        ) for panel_id, carousel_id, fieldset in 
+            zip(ids_panels, ids_carousels, fieldsets)
+    ]
 
 
 page_layout = dmc.Box(
     children=[
         dmc.Tabs(
-            id=PageIds.TAB_ONE.value,
-            value='tab-1',
+            value=ComponentsIdTree.Tabs.TabPanels.PANEL_BASIS_TRADE,
             children=[
                 dmc.TabsList(
                     children=[
-                        dcc.Store(
-                            id='tab-1-store',
-                            data={'active_carousel': 0}
-                        ),
-                        dmc.TabsTab(
-                            value='tab-1',
-                            children='Basis Trade'
-                        ),
-                        dcc.Store(
-                            id='tab-2-store',
-                            data={'active_carousel': 0}
-                        ),
-                        dmc.TabsTab(
-                            value='tab-2',
-                            children="Basis Trade Leveraged",
-                        ),
-                        dcc.Store(
-                            id='tab-3-store',
-                            data={'active_carousel': 0}
-                        ),
-                        dmc.TabsTab(
-                            value='tab-3',
-                            children="Arbitrage ETHBTCUSDT",
-                        )
+                        *generate_stores(ComponentsIdTree.Tabs.TabStores),
+                        *generate_tabs(ComponentsIdTree.Tabs.TabPanels)
                     ]
                 ),
-                dmc.TabsPanel(
-                    id='tab-1',
-                    value='tab-1',
-                    children=generate_tab_basis_trade()
-                ),
-                dmc.TabsPanel(
-                    id='tab-2',
-                    value='tab-2',
-                    children=generate_tab_basis_trade_leveraged()
-                ),
-                dmc.TabsPanel(
-                    id='tab-3',
-                    value='tab-3',
-                    children=generate_tab_ethbtcusdt()
+                *generate_panels(
+                    ComponentsIdTree.Tabs.TabPanels,
+                    ComponentsIdTree.Tabs.TabCarousel,
+                    [fieldset_basis_trade, fieldset_basis_trade_leveraged, fieldset_ethbtcusdt]
                 )
             ]
         )
@@ -72,7 +97,6 @@ page_layout = dmc.Box(
 app_layout = dmc.Box(
     children=[
         dmc.Box(
-            id='page-content',
             children=[
                 page_layout
             ]
