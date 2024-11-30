@@ -14,6 +14,7 @@ fieldset_basis_trade_leveraged = dmc.Fieldset(
             label="Select Coin",
             placeholder="Select Coin",
             value=Symbol.BTCUSDT,
+            allowDeselect=False,
             data=[
                 {"value": Symbol.BTCUSDT, "label": "BTC",
                     "description": "Bitcoin"},

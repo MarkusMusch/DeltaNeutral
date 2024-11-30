@@ -1,7 +1,4 @@
 """ This module contains functions that generate graphs for the funding rate and open interest of ETHBTCUSDT. """
-from typing import List, Union
-
-import dash_mantine_components as dmc
 import numpy as np
 
 from backend.crud.crud_funding import read_funding_entries
@@ -9,13 +6,11 @@ from backend.crud.crud_open_interest import read_open_interest_entries
 from backend.models.models_orm import Symbol
 
 
-def generate_graph_cumulative_arbitrage() -> List[Union[dmc.Title, dmc.LineChart]]:
-    """ 
-    This function generates a graph that shows the cumulative return of the ETHBTCUSDT funding rate arbitrage strategy.
-    
+def load_data_cumulative_arbitrage():
+    """ This function loads the data for the cumulative arbitrage funding rate graph.
+
     Returns:
-        List[Union[dmc.Title, dmc.LineChart]]: A Dash graph object that shows the cumulative return of the funding
-            rate arbitrage strategy.
+        dict: A dictionary containing the timestamps and funding rates for the given coin.
     """
     timestamps_btc, funding_rates_btc = read_funding_entries(Symbol.BTCUSDT)
     timestamps_eth, funding_rates_eth = read_funding_entries(Symbol.ETHUSDT)
@@ -26,15 +21,17 @@ def generate_graph_cumulative_arbitrage() -> List[Union[dmc.Title, dmc.LineChart
     timestamps_btc, funding_rates_btc = timestamps_btc[-min_entries:], funding_rates_btc[-min_entries:]
     timestamps_eth, funding_rates_eth = timestamps_eth[-min_entries:], funding_rates_eth[-min_entries:]
     timestamps_ethbtc, funding_rates_ethbtc = timestamps_ethbtc[-min_entries:], funding_rates_ethbtc[-min_entries:]
- 
+
     # Calculate the difference: BTCUSDT + ETHBTCUSDT - ETHUSDT
-    funding_rate_difference= (
+    funding_rate_difference = (
         funding_rates_btc +
         funding_rates_ethbtc -
         funding_rates_eth
     )
-    
+
     compound_return_arbitrage = 100*(np.cumprod(1 + np.array(funding_rate_difference)) - 1)
+
+    title = f"Compound Funding Difference ETHBTCUSDT"
 
     data = []
     for ts, compound in zip(timestamps_btc, compound_return_arbitrage):
@@ -44,44 +41,19 @@ def generate_graph_cumulative_arbitrage() -> List[Union[dmc.Title, dmc.LineChart
                 f'Compound Funding Difference': round(compound, 2),
             }
         )
-
-    return [
-        dmc.Center(
-            children=[
-                dmc.Title(
-                    f"Compound Funding Difference",
-                    order=4,
-                    mt='xl'
-                )
-            ]
-        ),
-        dmc.LineChart(
-            h="calc(80vh - 300px)",
-            dataKey="date",
-            data=data,
-            series = [
-                {"name": "Compound Funding Difference", "color": "indigo.6"},
-            ],
-            curveType="linear",
-            tickLine="xy",
-            gridAxis="xy",
-            withDots=False,
-            style={
-                "marginTop": "10px",
-                "marginBottom": "50px",
-                "marginLeft": "50px",
-                "marginRight": "50px"
-            }
-        )
+    
+    series = [
+        {"name": f"Compound Funding Difference", "color": "indigo.6"}
     ]
 
+    return title, data, series
 
-def generate_graph_funding_rates() -> List[Union[dmc.Title, dmc.LineChart]]:
-    """ 
-    This function generates a graph that shows the funding rates for BTC, ETH and ETHBTC.
-    
+
+def load_data_funding_rates_ethbtcusdt():
+    """ This function loads the data for the funding rates graph.
+
     Returns:
-        List[Union[dmc.Title, dmc.LineChart]]: A Dash graph object that shows the funding rates for BTC, ETH and ETHBTC.
+        dict: A dictionary containing the timestamps and funding rates for the given coin.
     """
     timestamps_btc, funding_rates_btc = read_funding_entries(Symbol.BTCUSDT)
     timestamps_eth, funding_rates_eth = read_funding_entries(Symbol.ETHUSDT)
@@ -92,6 +64,8 @@ def generate_graph_funding_rates() -> List[Union[dmc.Title, dmc.LineChart]]:
     timestamps_btc, funding_rates_btc = timestamps_btc[-min_entries:], funding_rates_btc[-min_entries:]
     timestamps_eth, funding_rates_eth = timestamps_eth[-min_entries:], funding_rates_eth[-min_entries:]
     timestamps_ethbtc, funding_rates_ethbtc = timestamps_ethbtc[-min_entries:], funding_rates_ethbtc[-min_entries:]
+
+    title = f"Funding Rates BTC, ETH, ETHBTC"
 
     data = []
     for ts, funding_btc, funding_eth, funding_ethbtc in zip(
@@ -109,52 +83,24 @@ def generate_graph_funding_rates() -> List[Union[dmc.Title, dmc.LineChart]]:
             }
         )
 
-
-    return [
-        dmc.Center(
-            children=[
-                dmc.Title(
-                    f"Funding Rates BTC, ETH, ETHBTC",
-                    order=4,
-                    mt='xl'
-                )
-            ]
-        ),
-        dmc.LineChart(
-            h="calc(80vh - 300px)",
-            dataKey="date",
-            data=data,
-            series = [
-                {"name": "BTC Funding", "color": "blue.6"},
-                {"name": "ETH Funding", "color": "orange.6"},
-                {"name": "ETHBTC Funding", "color": "green.6"}
-            ],
-            referenceLines=[
-                {"y": 0, "label": "", "color": "red.6"},
-            ],
-            curveType="linear",
-            tickLine="xy",
-            gridAxis="xy",
-            withDots=False,
-            style={
-                "marginTop": "10px",
-                "marginBottom": "50px",
-                "marginLeft": "50px",
-                "marginRight": "50px"
-            }
-        )
+    series = [
+        {"name": "BTC Funding", "color": "blue.6"},
+        {"name": "ETH Funding", "color": "orange.6"},
+        {"name": "ETHBTC Funding", "color": "green.6"}
     ]
 
+    return title, data, series
 
-def generate_graph_open_interest() -> List[Union[dmc.Title, dmc.LineChart]]:
-    """
-    This function generates a graph that shows the open interest for ETHBTCUSDT.
+
+def load_data_open_interest():
+    """ This function loads the data for the open interest graph.
 
     Returns:
-        List[Union[dmc.Title, dmc.LineChart]]: A Dash graph object that shows the open interest for ETHBTCUSDT.
+        dict: A dictionary containing the timestamps and open interest for the given coin.
     """
     timestamps_oi_ethbtc, open_interest_ethbtc = read_open_interest_entries(Symbol.ETHBTCUSDT)
 
+    title = f"Open Interest ETHBTCUSDT"
 
     data = []
     for ts, oi in zip(timestamps_oi_ethbtc, open_interest_ethbtc):
@@ -165,44 +111,18 @@ def generate_graph_open_interest() -> List[Union[dmc.Title, dmc.LineChart]]:
             }
         )
 
-    return [
-        dmc.Center(
-            children=[
-                dmc.Title(
-                    f"Open Interest ETHBTCUSDT",
-                    order=4,
-                    mt='xl'
-                )
-            ]
-        ),
-        dmc.LineChart(
-            h="calc(80vh - 300px)",
-            dataKey="date",
-            data=data,
-            series = [
-                {"name": "Open Interest", "color": "indigo.6"}
-            ],
-            curveType="linear",
-            tickLine="xy",
-            gridAxis="xy",
-            withDots=False,
-            style={
-                "marginTop": "10px",
-                "marginBottom": "50px",
-                "marginLeft": "50px",
-                "marginRight": "50px"
-            }
-        )
+    series = [
+        {"name": f"Open Interest", "color": "indigo.6"}
     ]
 
+    return title, data, series
 
 
-def generate_graph_cumulative_funding_rates() -> List[Union[dmc.Title, dmc.LineChart]]:
-    """
-    This function generates a graph that shows the cumulative return of the funding earned.
-    
+def load_data_cumulative_funding_ethbtcusdt():
+    """ This function loads the data for the cumulative funding rates graph.
+
     Returns:
-        List[Union[dmc.Title, dmc.LineChart]]: A Dash graph object that shows the cumulative return of the funding earned.
+        dict: A dictionary containing the timestamps and funding rates for the given coin.
     """
     timestamps_btc, funding_rates_btc = read_funding_entries(Symbol.BTCUSDT)
     timestamps_eth, funding_rates_eth = read_funding_entries(Symbol.ETHUSDT)
@@ -227,6 +147,8 @@ def generate_graph_cumulative_funding_rates() -> List[Union[dmc.Title, dmc.LineC
     compound_return_ethbtc = np.cumprod(1 + np.array(funding_rates_ethbtc)) - 1
     compound_return_arbitrage = np.cumprod(1 + np.array(funding_rate_difference)) - 1
 
+    title = f"Compound Funding Rates BTC, ETH, ETHBTC, Arbitrage"
+
     data = []
     for ts, funding_btc, funding_eth, funding_ethbtc, arb in zip(
         timestamps_btc,
@@ -245,37 +167,11 @@ def generate_graph_cumulative_funding_rates() -> List[Union[dmc.Title, dmc.LineC
             }
         )
 
-
-    return [
-        dmc.Center(
-            children=[
-                dmc.Title(
-                    f"Compound Funding Rates BTC, ETH, ETHBTC, Arbitrage",
-                    order=4,
-                    mt='xl'
-                )
-            ]
-        ),
-        dmc.LineChart(
-            h="calc(80vh - 300px)",
-            dataKey="date",
-            data=data,
-            series = [
-                {"name": "BTC Funding Compound", "color": "blue.6"},
-                {"name": "ETH Funding Compound", "color": "orange.6"},
-                {"name": "ETHBTC Funding Compound", "color": "green.6"},
-                {"name": "Arbitrage Funding", "color": "red.6"}
-            ],
-            curveType="linear",
-            tickLine="xy",
-            gridAxis="xy",
-            withDots=False,
-            style={
-                "marginTop": "10px",
-                "marginBottom": "50px",
-                "marginLeft": "50px",
-                "marginRight": "50px"
-            }
-        )
+    series = [
+        {"name": "BTC Funding Compound", "color": "blue.6"},
+        {"name": "ETH Funding Compound", "color": "orange.6"},
+        {"name": "ETHBTC Funding Compound", "color": "green.6"},
+        {"name": "Arbitrage Funding", "color": "red.6"}
     ]
 
+    return title, data, series

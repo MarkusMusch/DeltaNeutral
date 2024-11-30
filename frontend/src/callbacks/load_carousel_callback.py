@@ -5,42 +5,94 @@ from dash import callback, dcc, Input, MATCH, no_update, Output, State
 import dash_mantine_components as dmc
 
 from backend.models.models_orm import Symbol
+from frontend.src.components.graph_layout import generate_graph
 from frontend.src.data_handling.data_handling_basis_trade import (
-    generate_graph_cumulative_funding,
-    generate_graph_funding_rates
+    load_data_cumulative_funding,
+    load_data_funding_rates
 )
 from frontend.src.data_handling.data_handling_basis_trade_leveraged import (
-    generate_graph_cumulative_funding_leveraged,
-    generate_graph_funding_rates_leveraged,
-    generate_graph_net_income_leveraged
+    load_data_cumulative_funding_leveraged,
+    load_data_funding_rates_leveraged,
+    load_data_net_income_leveraged
 )
 
 
-def generate_carousel_strategy(triggered: str, coin: Symbol) -> List[dmc.CarouselSlide]:
+def generate_carousel_strategy(
+    triggered: str,
+    coin: Symbol,
+    active: int,
+    data: dict
+) -> Tuple[List[dmc.CarouselSlide], dict]:
     """Generate the content for the carousel in the basis trade and leveraged basis trade tabs.
     
     Args:
         triggered (str): The type of the component that triggered the callback.
         coin (Symbol): The symbol of the coin selected in the Select component.
+        active (int): The index of the currently active slide in the carousel.
+        data (dict): The current state data stored in the store belonging to the active tab. It includes information
         
     Returns:
         List[dmc.CarouselSlide]: The content for the carousel.
     """
     if triggered == 'regular':
-        return [dmc.CarouselSlide(func(coin)) for func in [
-            generate_graph_cumulative_funding,
-            generate_graph_funding_rates
-        ]]
+        if active == 0:
+            data['active_carousel'] = 0
+            return [
+                dmc.CarouselSlide(
+                    generate_graph(
+                        *load_data_cumulative_funding(coin),
+                        False
+                    )
+                ),
+                dmc.CarouselSlide([])
+            ], data
+        elif active == 1:
+            data['active_carousel'] = 1
+            return [
+                dmc.CarouselSlide([]),
+                dmc.CarouselSlide(
+                    generate_graph(
+                        *load_data_funding_rates(coin)
+                    )
+                )
+            ], data
+
     elif triggered == 'leveraged':
-        
-        return [dmc.CarouselSlide(func()) for func in [
-            generate_graph_cumulative_funding_leveraged,
-            generate_graph_funding_rates_leveraged,
-            generate_graph_net_income_leveraged
-        ]]
-    else:
-        #TODO: Add error handling
-        return no_update
+        if active == 0:
+            data['active_carousel'] = 0
+            return [
+                dmc.CarouselSlide(
+                    generate_graph(
+                        *load_data_cumulative_funding_leveraged(coin)
+                    )
+                ),
+                dmc.CarouselSlide([]),
+                dmc.CarouselSlide([])
+            ], data
+        elif active == 1:
+            data['active_carousel'] = 1
+            return [
+                dmc.CarouselSlide([]),
+                dmc.CarouselSlide(
+                    generate_graph(
+                        *load_data_funding_rates_leveraged(coin)
+                    )
+                ),
+                dmc.CarouselSlide([])
+            ], data
+        elif active == 2:
+            data['active_carousel'] = 2
+            return [
+                dmc.CarouselSlide([]),
+                dmc.CarouselSlide([]),
+                dmc.CarouselSlide(
+                    generate_graph(
+                        *load_data_net_income_leveraged(coin)
+                    )
+                )
+            ], data
+
+    return no_update, data
 
 
 @callback(
@@ -74,13 +126,8 @@ def update_basis_trade(
             - The updated state data reflecting the currently active carousel slide.
     """
     triggered = _id['type']
-
-    if active in {0, 1}:
-        data['active_carousel'] = active
-    else:
-        return no_update, data
             
-    return generate_carousel_strategy(triggered, coin), data
+    return generate_carousel_strategy(triggered, coin, active, data)
 
 
 @callback(
@@ -111,17 +158,29 @@ def handle_tab_switch_basis_trade(
     trigger = _id['type']
 
     if trigger == 'regular':
-        if data['active_carousel'] in {0, 1}:
-            return [dmc.CarouselSlide(func(coin)) for func in [
-                generate_graph_cumulative_funding,
-                generate_graph_funding_rates
-            ]]
+        carousel = [dmc.CarouselSlide([]) for _ in range(2)]
+        loaders = [
+            (load_data_cumulative_funding, False),
+            (load_data_funding_rates, True)
+        ]
+        carousel[data["active_carousel"]] = dmc.CarouselSlide(
+            generate_graph(
+                *loaders[data["active_carousel"]][0](coin),
+                loaders[data["active_carousel"]][1]
+            )
+        )
     elif trigger == 'leveraged':
-        if data['active_carousel'] in {0, 1}:
-            return [dmc.CarouselSlide(func(coin)) for func in [
-                generate_graph_cumulative_funding_leveraged,
-                generate_graph_funding_rates_leveraged,
-                generate_graph_net_income_leveraged
-            ]]
+        carousel = [dmc.CarouselSlide([]) for _ in range(3)]
+        loaders = [
+            load_data_cumulative_funding_leveraged,
+            load_data_funding_rates_leveraged,
+            load_data_net_income_leveraged
+        ]
+        carousel[data["active_carousel"]] = dmc.CarouselSlide(
+            generate_graph(
+                *loaders[data["active_carousel"]](coin)
+            )
+        )
+        return carousel
     else:
         return no_update
