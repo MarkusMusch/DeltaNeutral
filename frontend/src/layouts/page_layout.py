@@ -8,7 +8,6 @@ import dash_mantine_components as dmc
 from frontend.src.components.components_id_tree import ComponentsIdTree
 from frontend.src.components.tabs.basis_trade import fieldset_basis_trade
 from frontend.src.components.tabs.basis_trade_leveraged import fieldset_basis_trade_leveraged
-from frontend.src.components.tabs.ethbtcusdt import fieldset_ethbtcusdt
 from frontend.src.components.tabs.tab_layout import generate_tab
 
 
@@ -85,7 +84,7 @@ page_layout = dmc.Box(
                 *generate_panels(
                     ComponentsIdTree.Tabs.TabPanels,
                     ComponentsIdTree.Tabs.TabCarousel,
-                    [fieldset_basis_trade, fieldset_basis_trade_leveraged, fieldset_ethbtcusdt]
+                    [fieldset_basis_trade, fieldset_basis_trade_leveraged]
                 )
             ]
         )

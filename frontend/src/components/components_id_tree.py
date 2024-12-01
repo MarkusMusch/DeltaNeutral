@@ -23,15 +23,10 @@ class ComponentsIdTree():
                 "leaf": "basis-trade",
                 "type": "leveraged"
             }
-            STORE_ETHBTCUSDT = {
-                "branch": "stores",
-                "leaf": "ethbtcusdt"
-            }
 
         class TabPanels(str, Enum):
             PANEL_BASIS_TRADE = "Basis Trade"
             PANEL_BASIS_TRADE_LEVERAGED = "Basis Trade Leveraged"
-            PANEL_ETHBTCUSDT = "Arbitrage ETHBTCUSDT"
         
         class TabCarousel(dict, Enum):
             CAROUSEL_BASIS_TRADE = {
@@ -43,10 +38,6 @@ class ComponentsIdTree():
                 "branch": "carousel",
                 "leaf": "basis-trade",
                 "type": "leveraged"
-            }
-            CAROUSEL_ETHBTCUSDT = {
-                "branch": "carousel",
-                "leaf": "ethbtcusdt"
             }
         
         class TabSettings(dict, Enum):
