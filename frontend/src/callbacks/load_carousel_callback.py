@@ -169,6 +169,8 @@ def handle_tab_switch_basis_trade(
                 loaders[data["active_carousel"]][1]
             )
         )
+        return carousel
+
     elif trigger == 'leveraged':
         carousel = [dmc.CarouselSlide([]) for _ in range(3)]
         loaders = [
@@ -181,6 +183,7 @@ def handle_tab_switch_basis_trade(
                 *loaders[data["active_carousel"]](coin)
             )
         )
-        return carousel  # Fix: Ensure the return statement is inside the elif block
+        return carousel
+
     else:
         return no_update

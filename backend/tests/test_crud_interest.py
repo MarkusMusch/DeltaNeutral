@@ -15,7 +15,7 @@ def test_create_interest_entries():
     interest_rate_record = InterestRate(coin=Coin.DAI, interest_rate="0.05", interest_rate_timestamp="1700000000000")
 
     # Step 2: Mock the session and methods using patch
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -33,7 +33,7 @@ def test_create_interest_entries_integrity_error():
     
 
     # Step 2: Mock the session and simulate an IntegrityError
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -57,7 +57,7 @@ def test_read_interest_entries():
     ]
 
     # Step 2: Mock the session and query methods
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -88,7 +88,7 @@ def test_read_interest_entries_fewer_records():
     ]
 
     # Step 2: Mock the session and query methods
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -112,7 +112,7 @@ def test_read_interest_entries_no_records():
     mock_interest_rates = []
 
     # Step 2: Mock the session and query methods
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -129,7 +129,7 @@ def test_read_interest_entries_no_records():
 
 # Test if the correct query was executed
 def test_read_interest_entries_query_execution():
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -146,7 +146,7 @@ def test_read_interest_entries_sqlalchemy_error():
     symbol = Coin('DAI')
 
     # Step 1: Mock the session and simulate a SQLAlchemyError
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -166,7 +166,7 @@ def test_read_interest_entries_unexpected_error():
     symbol = Coin('DAI')  # Example symbol
 
     # Step 1: Mock the session and simulate an unexpected error
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -193,7 +193,7 @@ def test_read_most_recent_update_interest():
     )
 
     # Step 2: Mock the session and query methods
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -211,7 +211,7 @@ def test_read_most_recent_update_interest():
 # Test when there are no entries in the database
 def test_read_most_recent_update_interest_no_entries():
     # Step 1: Simulate no entries by returning None
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -225,7 +225,7 @@ def test_read_most_recent_update_interest_no_entries():
 
 # Test if the correct query was executed
 def test_read_most_recent_update_interest_query_execution():
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -243,7 +243,7 @@ def test_read_most_recent_update_interest_sqlalchemy_error():
     symbol = Coin('DAI') 
 
     # Step 1: Mock the session and simulate a SQLAlchemyError
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
@@ -262,7 +262,7 @@ def test_read_most_recent_update_interest_unexpected_error():
     symbol = Coin('DAI')
 
     # Step 1: Mock the session and simulate an unexpected error
-    with patch("backend.crud.crud_interest.Session") as mock_session:
+    with patch("backend.data_access.crud.crud_interest.Session") as mock_session:
         mock_db_session = MagicMock()
         mock_session.return_value.__enter__.return_value = mock_db_session
 
