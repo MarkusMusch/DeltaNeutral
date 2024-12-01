@@ -1,9 +1,9 @@
 import time
 
-from backend.api_client import ByBitClient
-from backend.crud.crud_funding import create_funding_entries, read_most_recent_update_funding 
-from backend.crud.crud_interest import create_interest_entries, read_most_recent_update_interest
-from backend.crud.crud_open_interest import create_open_interest_entries, read_most_recent_update_open_interest
+from backend.data_access.api_client import ByBitClient
+from backend.data_access.crud.crud_funding import create_funding_entries, read_most_recent_update_funding 
+from backend.data_access.crud.crud_interest import create_interest_entries, read_most_recent_update_interest
+from backend.data_access.crud.crud_open_interest import create_open_interest_entries, read_most_recent_update_open_interest
 from backend.models.models_api import FundingRequest, OpenInterestRequest
 from backend.models.models_orm import Coin, FundingRate, InterestRate, OpenInterest, Symbol
 

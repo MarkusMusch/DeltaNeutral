@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from unittest.mock import patch, MagicMock
 
 from backend.models.models_orm import InterestRate, Coin
-from backend.crud.crud_interest import create_interest_entries, read_interest_entries, read_most_recent_update_interest
+from backend.data_access.crud.crud_interest import create_interest_entries, read_interest_entries, read_most_recent_update_interest
 
 
 # Test that entries are added in bulk with `add_all`

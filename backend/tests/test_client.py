@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from backend.api_client import ByBitClient
+from backend.data_access.api_client import ByBitClient
 from backend.models.models_api import FundingRequest, OpenInterestRequest
 
 

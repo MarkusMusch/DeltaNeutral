@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from unittest.mock import patch, MagicMock
 
 from backend.models.models_orm import FundingRate, Symbol
-from backend.crud.crud_funding import create_funding_entries, read_funding_entries, read_most_recent_update_funding
+from backend.data_access.crud.crud_funding import create_funding_entries, read_funding_entries, read_most_recent_update_funding
 
 
 # Test that entries are added in bulk with `add_all`

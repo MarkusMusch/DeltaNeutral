@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from unittest.mock import patch, MagicMock
 
 from backend.models.models_orm import OpenInterest, Symbol
-from backend.crud.crud_open_interest import create_open_interest_entries, read_open_interest_entries, read_most_recent_update_open_interest
+from backend.data_access.crud.crud_open_interest import create_open_interest_entries, read_open_interest_entries, read_most_recent_update_open_interest
 
 
 # Test that OpenInterest entries are added correctly
