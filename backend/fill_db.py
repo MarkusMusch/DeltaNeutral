@@ -1,4 +1,4 @@
-from backend.download_data import fill_funding, fill_open_interest, fill_interest
+from backend.services.download_data import fill_funding, fill_open_interest, fill_interest
 from backend.models.models_orm import Coin, Symbol
 
 

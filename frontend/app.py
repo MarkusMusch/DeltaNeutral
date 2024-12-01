@@ -4,7 +4,7 @@ from dash_iconify import DashIconify
 import dash_mantine_components as dmc
 from sqlalchemy import create_engine
 
-from backend.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
+from backend.services.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
 from backend.models.models_orm import Base, Coin, Symbol
 from frontend.settings import frontend_settings
 # This is not explicitly used but needs to be imported to make the callabacks knwon to the app
