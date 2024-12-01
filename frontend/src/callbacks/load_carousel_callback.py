@@ -181,6 +181,6 @@ def handle_tab_switch_basis_trade(
                 *loaders[data["active_carousel"]](coin)
             )
         )
-        return carousel
+        return carousel  # Fix: Ensure the return statement is inside the elif block
     else:
         return no_update

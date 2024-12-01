@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import numpy as np
 from pydantic import ValidationError
@@ -49,8 +49,10 @@ class TestFundingHistoryResponse:
         
         timestamps, funding_rates = funding_rate_response.unpacked_data
 
-        expected_datetimes = [datetime(2023, 11, 14, 22, 15),
-                              datetime(2023, 11, 14, 22, 13, 20)]
+        expected_datetimes = [
+            datetime(2023, 11, 14, 22, 15, tzinfo=timezone.utc),
+            datetime(2023, 11, 14, 22, 13, 20 ,tzinfo=timezone.utc)
+        ]
         expected_funding_rates = [2.0, 1.0]
 
         assert list(timestamps) == expected_datetimes
@@ -114,8 +116,10 @@ class TestInterestRateResponse:
         timestamps, interest_rates = interest_rate_response.unpacked_data
 
         # Expected datetime and interest rates
-        expected_datetimes = [datetime(2023, 11, 14, 22, 15),
-                              datetime(2023, 11, 14, 22, 13, 20)]
+        expected_datetimes = [
+            datetime(2023, 11, 14, 22, 15, tzinfo=timezone.utc),
+            datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc)
+        ]
         expected_interest_rates = [0.03, 0.05]
 
         # Assertions for unpacked data

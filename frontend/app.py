@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 
 from backend.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
 from backend.models.models_orm import Base, Coin, Symbol
+from frontend.settings import frontend_settings
 # This is not explicitly used but needs to be imported to make the callabacks knwon to the app
 import frontend.src.callbacks.load_carousel_callback
 from frontend.src.components.components_id_tree import ComponentsIdTree
@@ -100,4 +101,8 @@ def switch_theme(_, theme):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(
+        debug=frontend_settings.DEBUG_MODE,
+        port=frontend_settings.PORT,
+        host=frontend_settings.HOST
+    )
