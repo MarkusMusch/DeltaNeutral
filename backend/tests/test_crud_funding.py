@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import numpy as np
 import pytest
@@ -69,8 +69,12 @@ def test_read_funding_entries_exact():
         timestamps, funding_rates_values = read_funding_entries(Symbol.BTCUSDT, num_values=2)
 
         # Step 4: Verify the output (timestamps and funding rates should be reversed)
-        expected_timestamps = np.array([datetime(2023, 11, 14, 22, 13, 20),
-                                        datetime(2023, 11, 14, 22, 15)])[::-1]
+        expected_timestamps = np.array(
+            [
+                datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc),
+                datetime(2023, 11, 14, 22, 15, tzinfo=timezone.utc)
+            ]
+        )[::-1]
         expected_funding_rates = np.array([0.01, 0.02])[::-1]
 
         np.testing.assert_array_equal(timestamps, expected_timestamps)
@@ -96,7 +100,7 @@ def test_read_funding_entries_fewer_records():
         timestamps, funding_rates_values = read_funding_entries(Symbol.BTCUSDT, num_values=5)
 
         # Step 4: Verify the output (timestamps and funding rates should be reversed)
-        expected_timestamps = np.array([datetime(2023, 11, 14, 22, 13, 20)])[::-1]
+        expected_timestamps = np.array([datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc)])[::-1]
         expected_funding_rates = np.array([0.01])[::-1]
 
         np.testing.assert_array_equal(timestamps, expected_timestamps)
@@ -203,7 +207,7 @@ def test_read_most_recent_update_funding():
         result = read_most_recent_update_funding(Symbol.BTCUSDT)
 
         # Step 4: Verify the returned timestamp
-        assert result == datetime(2023, 11, 14, 22, 13, 20)
+        assert result == datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc)
 
 
 # Test when there are no entries in the database

@@ -3,7 +3,6 @@
 It provides methods to get the funding history, open interest, and interest rate history from the ByBit API.
 """
 
-import configparser
 import hashlib
 import hmac
 import requests
@@ -16,9 +15,8 @@ from backend.models.models_api import (
     InterestRateResponse,
     OpenInterestRequest,
     OpenInterestResponse
-    )
-
-import backend.settings as settings
+)
+from backend.settings import backend_settings
 
 
 class ByBitClient:
@@ -35,16 +33,13 @@ class ByBitClient:
     """
 
     def __init__(self) -> None:
-        config = configparser.ConfigParser()
-        config.read(settings.CONFIG_PATH)
+        self.api_key = backend_settings.BYBIT_API_KEY
+        self.api_secret = backend_settings.BYBIT_API_SECRET
 
-        self.api_key = config.get('ByBit Basis Trade', 'api_key')
-        self.api_secret = config.get('ByBit Basis Trade', 'api_secret')
-
-        self.base_endpoint = settings.BASE_ENDPOINT_BYBIT
-        self.endpoint_funding = settings.ENDPOINT_FUNDING_BYBIT
-        self.endpoint_open_interest = settings.ENDPOINT_OPEN_INTEREST_BYBIT
-        self.endpoint_interest = settings.ENDPOINT_INTNEREST_BYBIT
+        self.base_endpoint = backend_settings.BASE_ENDPOINT_BYBIT
+        self.endpoint_funding = backend_settings.ENDPOINT_FUNDING_BYBIT
+        self.endpoint_open_interest = backend_settings.ENDPOINT_OPEN_INTEREST_BYBIT
+        self.endpoint_interest = backend_settings.ENDPOINT_INTNEREST_BYBIT
 
     def _sign_request(self, params: dict) -> str:
         """

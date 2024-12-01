@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import numpy as np
 import pytest
@@ -68,8 +68,12 @@ def test_read_open_interest_entries_exact():
         timestamps, open_interest_values = read_open_interest_entries(Symbol.BTCUSDT, num_values=2)
 
         # Step 4: Verify the output (timestamps and open interest should be reversed)
-        expected_timestamps = np.array([datetime(2023, 11, 14, 22, 13, 20),
-                                        datetime(2023, 11, 14, 22, 15)])[::-1]
+        expected_timestamps = np.array(
+            [
+                datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc),
+                datetime(2023, 11, 14, 22, 15, tzinfo=timezone.utc)
+            ]
+        )[::-1]
         expected_open_interest = np.array([1000.50, 2000.75])[::-1]
 
         np.testing.assert_array_equal(timestamps, expected_timestamps)
@@ -95,7 +99,7 @@ def test_read_open_interest_entries_fewer_records():
         timestamps, open_interest_values = read_open_interest_entries(Symbol.BTCUSDT, num_values=5)
 
         # Step 4: Verify the output (timestamps and open interest should be reversed)
-        expected_timestamps = np.array([datetime(2023, 11, 14, 22, 13, 20)])[::-1]
+        expected_timestamps = np.array([datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc)])[::-1]
         expected_open_interest = np.array([1000.50])[::-1]
 
         np.testing.assert_array_equal(timestamps, expected_timestamps)
@@ -201,7 +205,7 @@ def test_read_most_recent_update_open_interest():
         result = read_most_recent_update_open_interest(Symbol.BTCUSDT)
 
         # Step 4: Verify the returned timestamp
-        expected_timestamp = datetime.utcfromtimestamp(1700000000)  # Convert to datetime
+        expected_timestamp = datetime.fromtimestamp(1700000000, tz=timezone.utc)
         assert result == expected_timestamp
 
 

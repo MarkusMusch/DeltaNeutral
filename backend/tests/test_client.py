@@ -5,36 +5,30 @@ from backend.models.models_api import FundingRequest, OpenInterestRequest
 
 
 # Define constants for mocking
-MOCK_CONFIG_PATH = "/path/to/config.ini"
+MOCK_API_KEY = "test_api_key"
+MOCK_API_SECRET = "test_api_secret"
+
 MOCK_BASE_ENDPOINT = "https://api.bybit.com"
 MOCK_ENDPOINT_FUNDING = "/funding"
 MOCK_ENDPOINT_OPEN_INTEREST = "/open_interest"
 MOCK_ENDPOINT_INTEREST = "/interest_rate"
-MOCK_API_KEY = "test_api_key"
-MOCK_API_SECRET = "test_api_secret"
 
 
 @pytest.fixture
 def mock_client():
-    with patch('backend.api_client.configparser.ConfigParser') as mock_cp_class:
-        with patch('backend.api_client.settings') as mock_settings:
+    with patch('backend.api_client.backend_settings') as mock_settings:
 
-            mock_settings.CONFIG_PATH = MOCK_CONFIG_PATH
-            mock_settings.BASE_ENDPOINT_BYBIT = MOCK_BASE_ENDPOINT
-            mock_settings.ENDPOINT_FUNDING_BYBIT = MOCK_ENDPOINT_FUNDING
-            mock_settings.ENDPOINT_OPEN_INTEREST_BYBIT = MOCK_ENDPOINT_OPEN_INTEREST
-            mock_settings.ENDPOINT_INTNEREST_BYBIT = MOCK_ENDPOINT_INTEREST
- 
-            mock_cp = MagicMock()
-            mock_cp.get.side_effect = lambda section, key: {
-                ('ByBit Basis Trade', 'api_key'): MOCK_API_KEY,
-                ('ByBit Basis Trade', 'api_secret'): MOCK_API_SECRET
-            }[(section, key)]
-            mock_cp_class.return_value = mock_cp
+        mock_settings.BYBIT_API_KEY = MOCK_API_KEY
+        mock_settings.BYBIT_API_SECRET = MOCK_API_SECRET
 
-            client = ByBitClient()
+        mock_settings.BASE_ENDPOINT_BYBIT = MOCK_BASE_ENDPOINT
+        mock_settings.ENDPOINT_FUNDING_BYBIT = MOCK_ENDPOINT_FUNDING
+        mock_settings.ENDPOINT_OPEN_INTEREST_BYBIT = MOCK_ENDPOINT_OPEN_INTEREST
+        mock_settings.ENDPOINT_INTNEREST_BYBIT = MOCK_ENDPOINT_INTEREST
 
-            yield client
+        client = ByBitClient()
+
+        yield client
 
 
 @pytest.fixture

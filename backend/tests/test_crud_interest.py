@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import numpy as np
 import pytest
@@ -68,8 +68,12 @@ def test_read_interest_entries():
         timestamps, interest_rates_values = read_interest_entries(Coin.DAI)
 
         # Step 4: Verify the output (timestamps and interest rates should match)
-        expected_timestamps = np.array([datetime.utcfromtimestamp(1700000000),
-                                        datetime.utcfromtimestamp(1700000100)])
+        expected_timestamps = np.array(
+            [
+                datetime.fromtimestamp(1700000000, tz=timezone.utc),
+                datetime.fromtimestamp(1700000100, tz=timezone.utc)
+            ]
+        )
         expected_interest_rates = np.array([0.05, 0.04])
 
         np.testing.assert_array_equal(timestamps, expected_timestamps)
@@ -95,7 +99,7 @@ def test_read_interest_entries_fewer_records():
         timestamps, interest_rates_values = read_interest_entries(Coin.DAI)
 
         # Step 4: Verify the output (only one entry)
-        expected_timestamps = np.array([datetime.utcfromtimestamp(1700000000)])
+        expected_timestamps = np.array([datetime.fromtimestamp(1700000000, tz=timezone.utc)])
         expected_interest_rates = np.array([0.05])
 
         np.testing.assert_array_equal(timestamps, expected_timestamps)
@@ -200,7 +204,7 @@ def test_read_most_recent_update_interest():
         result = read_most_recent_update_interest(Coin.DAI)
 
         # Step 4: Verify the returned timestamp
-        expected_timestamp = datetime.utcfromtimestamp(1700000000)
+        expected_timestamp = datetime.fromtimestamp(1700000000, tz=timezone.utc)
         assert result == expected_timestamp
 
 

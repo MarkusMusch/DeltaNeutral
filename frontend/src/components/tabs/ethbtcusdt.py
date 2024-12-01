@@ -6,11 +6,12 @@ from dash.dependencies import Input, Output, State
 import dash_mantine_components as dmc
 
 from frontend.src.components.components_id_tree import ComponentsIdTree
+from frontend.src.components.graph_layout import generate_graph
 from frontend.src.data_handling.data_handling_ethbtcusdt import (
-    generate_graph_cumulative_arbitrage,
-    generate_graph_cumulative_funding_rates,
-    generate_graph_funding_rates,
-    generate_graph_open_interest
+    load_data_cumulative_arbitrage,
+    load_data_funding_rates_ethbtcusdt,
+    load_data_open_interest,
+    load_data_cumulative_funding_ethbtcusdt
 )
 
 
@@ -43,12 +44,21 @@ def handle_tab_switch_ethbtcusdt(
         List[dmc.CarouselSlide]: The updated content for the slides in the ETHBTCUSDT carousel.
     """
     if data['active_carousel'] in {0, 1, 2, 3}:
-        return [dmc.CarouselSlide(func()) for func in [
-            generate_graph_cumulative_arbitrage,
-            generate_graph_funding_rates,
-            generate_graph_open_interest,
-            generate_graph_cumulative_funding_rates
-        ]]
+
+        carousel = [dmc.CarouselSlide([]) for _ in range(4)]
+        funcs = [
+            (load_data_cumulative_arbitrage, False),
+            (load_data_funding_rates_ethbtcusdt, True),
+            (load_data_open_interest, False),
+            (load_data_cumulative_funding_ethbtcusdt, False)
+        ]
+        carousel[data['active_carousel']] = dmc.CarouselSlide(
+            generate_graph(
+                *funcs[data['active_carousel']][0](),
+                funcs[data['active_carousel']][1])
+        )
+
+        return carousel
     else:
         return no_update
 
@@ -82,9 +92,17 @@ def update_ethbtcusdt(
     else:
         return no_update, data
 
-    return [dmc.CarouselSlide(func()) for func in [
-        generate_graph_cumulative_arbitrage,
-        generate_graph_funding_rates,
-        generate_graph_open_interest,
-        generate_graph_cumulative_funding_rates
-    ]], data
+    carousel = [dmc.CarouselSlide([]) for _ in range(4)]
+    funcs = [
+        (load_data_cumulative_arbitrage, False),
+        (load_data_funding_rates_ethbtcusdt, True),
+        (load_data_open_interest, False),
+        (load_data_cumulative_funding_ethbtcusdt, False)
+    ]
+    carousel[data['active_carousel']] = dmc.CarouselSlide(
+        generate_graph(
+            *funcs[data['active_carousel']][0](),
+            funcs[data['active_carousel']][1])
+    )
+
+    return carousel, data
