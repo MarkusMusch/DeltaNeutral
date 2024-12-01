@@ -1,8 +1,8 @@
 """ This module contains functions that generate graphs for the funding rates and stable coin interest. """
 import numpy as np
 
-from backend.crud.crud_funding import read_funding_entries
-from backend.crud.crud_interest import read_interest_entries
+from backend.data_access.crud.crud_funding import read_funding_entries
+from backend.data_access.crud.crud_interest import read_interest_entries
 from backend.models.models_orm import Coin, Symbol
 
 

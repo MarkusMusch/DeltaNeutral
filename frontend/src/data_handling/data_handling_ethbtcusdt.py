@@ -1,8 +1,8 @@
 """ This module contains functions that generate graphs for the funding rate and open interest of ETHBTCUSDT. """
 import numpy as np
 
-from backend.crud.crud_funding import read_funding_entries
-from backend.crud.crud_open_interest import read_open_interest_entries
+from backend.data_access.crud.crud_funding import read_funding_entries
+from backend.data_access.crud.crud_open_interest import read_open_interest_entries
 from backend.models.models_orm import Symbol
 
 

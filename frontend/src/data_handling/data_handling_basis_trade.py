@@ -4,7 +4,7 @@ from typing import List, Union
 import dash_mantine_components as dmc
 import numpy as np
 
-from backend.crud.crud_funding import read_funding_entries
+from backend.data_access.crud.crud_funding import read_funding_entries
 from backend.models.models_orm import Symbol
 
 
