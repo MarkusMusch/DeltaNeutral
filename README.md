@@ -1,16 +1,36 @@
 # Funding Carry Dashboard
 
-## What is Funding Carry
+This Funding Carry Dashboard is a tool that collects real-time data from a cryptocurrency exchange, processes key metrics such as cumulative returns, and presents the insights in an interactive dashboard. Designed specifically for funding carry strategies, this app helps traders analyze performance, track funding rate differentials, and optimize their trading decisions.
 
 ## Includes:
 
-1. **Data Collection**
+The app follows a classical three-layer architecture that divides apps into three layers: the **Presentation Layer**, the **Logic Layer** and the **Data Access Layer**.
 
-2. **Data Handling**
+1. **The Presentation Layer: Data Analytics Dashboard**
 
-3. **Data Analytics Dashboard**
+- An interactive dashboard that visualizes key metrics such as cumulative returns and funding carry opportunities.
+
+2. **The Logic Layer: Data Handling**
+
+- Processes raw exchange data, computes funding carry metrics, and applies business logic.
+
+3. **The Data Access Layer: Database and Data Access**
+
+- Manages data retrieval, storage, and interaction with the crypto exchange API.
 
 ## Installation
+
+First, clone the repository.
+
+ ```bash
+ git clone 'https://github.com/MarkusMusch/DeltaNeutral.git' && cd DeltaNeutral/
+ ```
+
+Second, install all necessary dependencies by calling:
+
+ ```bash
+ poetry install
+ ```
 
 ## Usage
 
