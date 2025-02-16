@@ -4,7 +4,7 @@ This Funding Carry Dashboard is a tool that collects real-time data from a crypt
 
 <p align="center">
   <img src="https://github.com/MarkusMusch/DeltaNeutral/blob/main/images/BTC_cummulative_funding.png"
-  width=90%>
+  width=100%>
 </p>
 
 ## Includes:
