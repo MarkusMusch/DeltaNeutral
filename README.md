@@ -1,3 +1,18 @@
+# Funding Carry Dashboard
+
+## What is Funding Carry
+
+## Includes:
+
+1. **Data Collection**
+
+2. **Data Handling**
+
+3. **Data Analytics Dashboard**
+
+## Installation
+
+## Usage
 
 ## Contributing
 
