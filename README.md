@@ -44,6 +44,24 @@ Second, install all necessary dependencies by calling:
 
 ## Usage
 
+For permanent usage, the application comes with a Docker file to build a Docker container.
+
+To build the container run:
+
+ ```bash
+ sudo docker build -t deltaneutral .
+ ```
+
+ To start the container run:
+
+ ```bash
+ sudo docker run -d -p 8050:8050 --name deltaneutral-container --restart unless-stopped deltaneutral
+ ```
+
+ This starts the container on Port 8050. Once up and running you can access your dashboard by visiting http://0.0.0.0:8050/ in a browser.
+
+ The --restart option when starting the container makes the container start every time you boot your computer. Since the app is downloading the newest data upon starting, it can take a few moments until the app is available in the browser after booting your system.
+
 ## Contributing
 
 1. Fork it (https://github.com/MarkusMusch/DeltaNeutral/fork)
