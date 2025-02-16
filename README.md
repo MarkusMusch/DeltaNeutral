@@ -11,6 +11,11 @@ This Funding Carry Dashboard is a tool that collects real-time data from a crypt
 
 The app follows a classical three-layer architecture that divides apps into three layers: the **Presentation Layer**, the **Logic Layer** and the **Data Access Layer**.
 
+<p align="center">
+  <img src="https://github.com/MarkusMusch/DeltaNeutral/blob/main/images/Architecture.png"
+  width=50%>
+</p>
+
 1. **The Presentation Layer: Data Analytics Dashboard**
 
 - An interactive dashboard that visualizes key metrics such as cumulative returns and funding carry opportunities.
