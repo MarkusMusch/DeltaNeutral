@@ -13,7 +13,7 @@ The app follows a classical three-layer architecture that divides apps into thre
 
 <p align="center">
   <img src="https://github.com/MarkusMusch/DeltaNeutral/blob/main/images/Architecture.png"
-  width=50%>
+  width=100%>
 </p>
 
 1. **The Presentation Layer: Data Analytics Dashboard**
