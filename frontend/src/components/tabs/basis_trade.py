@@ -16,12 +16,12 @@ fieldset_basis_trade = dmc.Fieldset(
             value=Symbol.BTCUSDT,
             allowDeselect=False,
             data=[
-                {"value": Symbol.BTCUSDT, "label": "BTC",
-                    "description": "Bitcoin"},
-                {"value": Symbol.SOLUSDT, "label": "SOL",
-                    "description": "Solana"},
-                {"value": Symbol.ETHUSDT, "label": "ETH",
-                    "description": "Ethereum"}
+                {
+                    "value": symbol,
+                    "label": symbol.value,
+                    "description": symbol.value
+                }
+                for symbol in Symbol
             ]
         )
     ]

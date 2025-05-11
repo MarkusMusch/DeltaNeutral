@@ -1,6 +1,6 @@
 # Funding Carry Dashboard
 
-This Funding Carry Dashboard is a tool that collects real-time data from a cryptocurrency exchange, processes key metrics such as cumulative returns, and presents the insights in an interactive dashboard. Designed specifically for funding carry strategies, this app helps traders analyze performance, track funding rate differentials, and optimize their trading decisions.
+This Funding Carry Dashboard is a tool that collects data from a cryptocurrency exchange, processes key metrics such as cumulative returns, and presents the insights in an interactive dashboard. Designed specifically for funding carry strategies, this app helps traders analyze performance, track funding rate differentials, and optimize their trading decisions.
 
 <p align="center">
   <img src="https://github.com/MarkusMusch/DeltaNeutral/blob/main/images/BTC_cummulative_funding.png"

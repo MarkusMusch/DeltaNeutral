@@ -12,14 +12,49 @@ Base = declarative_base()
 class Symbol(str, Enum):
     """Enum for the trading symbols."""
     BTCUSDT = 'BTCUSDT'
+    BTCUSDC = 'BTCPERP'
+    BTCUSD = 'BTCUSD'
     ETHUSDT = 'ETHUSDT'
+    ETHUSDC = 'ETHPERP'
+    ETHUSD = 'ETHUSD'
     SOLUSDT = 'SOLUSDT'
+    SOLUSDC = 'SOLPERP'
+    SOLUSD = 'SOLUSD'
+    SUIUSDT = 'SUIUSDT'
+    SUIUSDC = 'SUIPERP'
+    USDCUSDT = 'USDCUSDT'
+    USDEUSDT = 'USDEUSDT'
+    XRPUSDT = 'XRPUSDT'
+    XRPUSD = 'XRPUSD'
+    BNBUSDT = 'BNBUSDT'
+    DOGEUSDT = 'DOGEUSDT'
+    ADAUSDT = 'ADAUSDT'
+    ADAUSD = 'ADAUSD'
+    BONKUSDT = '1000BONKUSDT'
+    WIFUSDT = 'WIFUSDT'
+    CHILLGUYUSDT = 'CHILLGUYUSDT'
+    PEPEUSDT = '1000PEPEUSDT'
+    TOSHIUSDT = '1000TOSHIUSDT'
+    GIGAUSDT = 'GIGAUSDT'
+    GOATUSDT = 'GOATUSDT'
+    RENDERUSDT = 'RENDERUSDT'
+    AKTUSDT = 'AKTUSDT'
+    SHIBUSDT = 'SHIB1000USDT'
+    POPCATUSDT = 'POPCATUSDT'
+    BRETTUSDT = 'BRETTUSDT'
+    MOGUSDT = '1000000MOGUSDT'
+    MOODENGUSDT = 'MOODENGUSDT'
+    APUSUDT = '1000APUUSDT'
     ETHBTCUSDT = 'ETHBTCUSDT'
 
 
 class Coin(str, Enum):
     """Enum for the coins."""
     DAI = 'DAI'
+    USDT = 'USDT'
+    USDC = 'USDC'
+    USDE = 'USDE'
+    TUSD = 'TUSD'
 
 
 class FundingRate(Base):

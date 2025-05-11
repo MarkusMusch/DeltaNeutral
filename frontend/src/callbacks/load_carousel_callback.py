@@ -4,7 +4,8 @@ from typing import List, Tuple
 from dash import callback, dcc, Input, MATCH, no_update, Output, State
 import dash_mantine_components as dmc
 
-from backend.models.models_orm import Symbol
+from backend.models.models_orm import Coin, Symbol
+from frontend.src.components.components_id_tree import ComponentsIdTree
 from frontend.src.components.graph_layout import generate_graph
 from frontend.src.data_handling.data_handling_basis_trade import (
     load_data_cumulative_funding,
@@ -35,62 +36,43 @@ def generate_carousel_strategy(
         List[dmc.CarouselSlide]: The content for the carousel.
     """
     if triggered == 'regular':
-        if active == 0:
-            data['active_carousel'] = 0
-            return [
-                dmc.CarouselSlide(
-                    generate_graph(
-                        *load_data_cumulative_funding(coin),
-                        False
-                    )
-                ),
-                dmc.CarouselSlide([])
-            ], data
-        elif active == 1:
-            data['active_carousel'] = 1
-            return [
-                dmc.CarouselSlide([]),
-                dmc.CarouselSlide(
-                    generate_graph(
-                        *load_data_funding_rates(coin)
-                    )
-                )
-            ], data
+
+        data['active_carousel'] = active
+        carousel = [dmc.CarouselSlide([]) for _ in range(2)]
+
+        loaders = [
+            load_data_cumulative_funding,
+            load_data_funding_rates
+        ]
+
+        carousel[data["active_carousel"]] = dmc.CarouselSlide(
+            generate_graph(
+                *loaders[data["active_carousel"]](coin),
+                data["active_carousel"] == 1
+            )
+        )
+
+        return carousel, data
 
     elif triggered == 'leveraged':
-        if active == 0:
-            data['active_carousel'] = 0
-            return [
-                dmc.CarouselSlide(
-                    generate_graph(
-                        *load_data_cumulative_funding_leveraged(coin)
-                    )
-                ),
-                dmc.CarouselSlide([]),
-                dmc.CarouselSlide([])
-            ], data
-        elif active == 1:
-            data['active_carousel'] = 1
-            return [
-                dmc.CarouselSlide([]),
-                dmc.CarouselSlide(
-                    generate_graph(
-                        *load_data_funding_rates_leveraged(coin)
-                    )
-                ),
-                dmc.CarouselSlide([])
-            ], data
-        elif active == 2:
-            data['active_carousel'] = 2
-            return [
-                dmc.CarouselSlide([]),
-                dmc.CarouselSlide([]),
-                dmc.CarouselSlide(
-                    generate_graph(
-                        *load_data_net_income_leveraged(coin)
-                    )
+        data['active_carousel'] = active
+        carousel = [dmc.CarouselSlide([]) for _ in range(3)]
+
+        loaders = [
+            load_data_cumulative_funding_leveraged,
+            load_data_funding_rates_leveraged,
+            load_data_net_income_leveraged
+        ]
+
+        carousel[data["active_carousel"]] = dmc.CarouselSlide(
+            generate_graph(
+                *loaders[data["active_carousel"]](
+                    coin
                 )
-            ], data
+            )
+        )
+
+        return carousel, data
 
     return no_update, data
 
@@ -131,59 +113,82 @@ def update_basis_trade(
 
 
 @callback(
-    Output({"branch": "carousel", "leaf": "basis-trade", "type": MATCH}, 'children', allow_duplicate=True),
-    Input({"leaf": "select-coin", "leaf": "basis-trade", "type": MATCH}, 'value'),
-    State({"branch": "stores", "leaf": "basis-trade", "type": MATCH}, 'data'),
-    State({"branch": "carousel", "leaf": "basis-trade", "type": MATCH}, 'id'),
+    Output(ComponentsIdTree.Tabs.TabCarousel.CAROUSEL_BASIS_TRADE, 'children', allow_duplicate=True),
+    Input(ComponentsIdTree.Tabs.TabSettings.SELECT_COIN_BASIS_TRADE, 'value'),
+    State(ComponentsIdTree.Tabs.TabStores.STORE_BASIS_TRADE, 'data'),
     prevent_initial_call=True
 )
 def handle_tab_switch_basis_trade(
     coin: Symbol,
     data: dict,
-    _id: dict
 ) -> List[dmc.CarouselSlide]:
     """ 
     Handle the tab switch event for the Basis Trade tab.
  
     Args:
-        _ (Any): The content of the Basis Trade tab.
-        coin (Symbol): The symbol of the coin selected in the `basis-trade-leveraged-select-coin` component.
+        coin (Symbol): The symbol of the coin selected in the dropdown component.
         data (dict): The current state data stored in `tab-2-store`. It includes information 
                     like which slide is currently active.
-        _id (dict): The ID of the component that triggered the callback
 
     Returns:
         List[dmc.CarouselSlide]: The updated content for the slides in the Basis Trade carousel.
     """
-    trigger = _id['type']
+    carousel = [dmc.CarouselSlide([]) for _ in range(2)]
 
-    if trigger == 'regular':
-        carousel = [dmc.CarouselSlide([]) for _ in range(2)]
-        loaders = [
-            (load_data_cumulative_funding, False),
-            (load_data_funding_rates, True)
-        ]
-        carousel[data["active_carousel"]] = dmc.CarouselSlide(
-            generate_graph(
-                *loaders[data["active_carousel"]][0](coin),
-                loaders[data["active_carousel"]][1]
+    loaders = [
+        load_data_cumulative_funding,
+        load_data_funding_rates
+    ]
+
+    carousel[data["active_carousel"]] = dmc.CarouselSlide(
+        generate_graph(
+            *loaders[data["active_carousel"]](coin),
+            data["active_carousel"] == 1
+        )
+    )
+
+    return carousel
+
+
+@callback(
+    Output(ComponentsIdTree.Tabs.TabCarousel.CAROUSEL_BASIS_TRADE_LEVERAGED, 'children', allow_duplicate=True),
+    Input(ComponentsIdTree.Tabs.TabSettings.SELECT_COIN_BASIS_TRADE_LEVERAGED, 'value'),
+    Input(ComponentsIdTree.Tabs.TabSettings.SELECT_STABLECOIN_BASIS_TRADE_LEVERAGED, 'value'),
+    State(ComponentsIdTree.Tabs.TabStores.STORE_BASIS_TRADE_LEVERAGED, 'data'),
+    prevent_initial_call=True
+)
+def handle_tab_switch_basis_trade_leveraged(
+    coin: Symbol,
+    stable: Coin,
+    data: dict,
+) -> List[dmc.CarouselSlide]:
+    """ 
+    Handle the tab switch event for the Basis Trade tab.
+ 
+    Args:
+        coin (Symbol): The symbol of the coin selected in the dropdown component.
+        stable (Coin): The stable coin selected in the dropdown component.
+        data (dict): The current state data stored in `tab-2-store`. It includes information 
+                    like which slide is currently active.
+
+    Returns:
+        List[dmc.CarouselSlide]: The updated content for the slides in the Basis Trade carousel.
+    """
+    carousel = [dmc.CarouselSlide([]) for _ in range(3)]
+
+    loaders = [
+        load_data_cumulative_funding_leveraged,
+        load_data_funding_rates_leveraged,
+        load_data_net_income_leveraged
+    ]
+
+    carousel[data["active_carousel"]] = dmc.CarouselSlide(
+        generate_graph(
+            *loaders[data["active_carousel"]](
+                coin,
+                stable
             )
         )
-        return carousel
+    )
 
-    elif trigger == 'leveraged':
-        carousel = [dmc.CarouselSlide([]) for _ in range(3)]
-        loaders = [
-            load_data_cumulative_funding_leveraged,
-            load_data_funding_rates_leveraged,
-            load_data_net_income_leveraged
-        ]
-        carousel[data["active_carousel"]] = dmc.CarouselSlide(
-            generate_graph(
-                *loaders[data["active_carousel"]](coin)
-            )
-        )
-        return carousel
-
-    else:
-        return no_update
+    return carousel

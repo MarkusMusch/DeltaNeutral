@@ -1,20 +1,27 @@
+from datetime import datetime, timezone
+import logging
 import time
 
-from backend.data_access.api_client import ByBitClient
-from backend.data_access.crud.crud_funding import create_funding_entries, read_most_recent_update_funding 
-from backend.data_access.crud.crud_interest import create_interest_entries, read_most_recent_update_interest
-from backend.data_access.crud.crud_open_interest import create_open_interest_entries, read_most_recent_update_open_interest
+from backend.data_access.api_client.bybit_client import ByBitClient
+from backend.data_access.crud.crud_funding import create_funding_entries
+from backend.data_access.crud.crud_interest import create_interest_entries
+from backend.data_access.crud.crud_open_interest import create_open_interest_entries
 from backend.models.models_api import FundingRequest, OpenInterestRequest
 from backend.models.models_orm import Coin, FundingRate, InterestRate, OpenInterest, Symbol
 
 
-def catch_latest_funding(symbol: Symbol) -> None:
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+def catch_latest_funding(
+    client: ByBitClient,
+    symbol: Symbol,
+    most_recent_datetime: str
+) -> None:
     
-    client = ByBitClient()
-
-    most_recent_datetime = read_most_recent_update_funding(symbol)
-
-    now = int(time.time() * 1000)
+    now = int(datetime.now(timezone.utc).timestamp() * 1000)
     end_time = now
 
     most_recent_time = most_recent_datetime.timestamp() * 1000
@@ -43,13 +50,13 @@ def catch_latest_funding(symbol: Symbol) -> None:
             end_time -= min(30*60*60*1000, end_time - most_recent_time)
 
 
-def catch_latest_open_interest(symbol):
+def catch_latest_open_interest(
+    client: ByBitClient,
+    symbol: Symbol,
+    most_recent_datetime: str
+) -> None:
 
-    client = ByBitClient()
-
-    most_recent_datetime = read_most_recent_update_open_interest(symbol)
-
-    now = int(time.time() * 1000)
+    now = int(datetime.now(timezone.utc).timestamp() * 1000)
     end_time = now
 
     most_recent_time = most_recent_datetime.timestamp() * 1000
@@ -79,13 +86,13 @@ def catch_latest_open_interest(symbol):
             end_time -= min(30*60*60*1000, end_time - most_recent_time)
 
 
-def catch_latest_interest(coin: Coin) -> None:
+def catch_latest_interest(
+    client: ByBitClient,
+    coin: Coin,
+    most_recent_datetime: str
+) -> None:
 
-    client = ByBitClient()
-
-    most_recent_datetime = read_most_recent_update_interest(coin)
-
-    now = int(time.time() * 1000)
+    now = int(datetime.now(timezone.utc).timestamp() * 1000)
     end_time = now
 
     most_recent_time = most_recent_datetime.timestamp() * 1000
@@ -106,9 +113,11 @@ def catch_latest_interest(coin: Coin) -> None:
             end_time -= min(30*60*60*1000, end_time - most_recent_time)
 
 
-def fill_funding(symbol: Symbol) -> None:
+def fill_funding(
+    client: ByBitClient,
+    symbol: Symbol
+) -> None:
     category = "linear"
-    client = ByBitClient()
 
     now = int(time.time() * 1000)
     end_time = now
@@ -135,9 +144,11 @@ def fill_funding(symbol: Symbol) -> None:
             break
 
 
-def fill_open_interest(symbol: Symbol) -> None:
+def fill_open_interest(
+    client: ByBitClient,
+    symbol: Symbol
+) -> None:
     category = "linear"
-    client = ByBitClient()
 
     now = int(time.time() * 1000)
     end_time = now
@@ -165,8 +176,10 @@ def fill_open_interest(symbol: Symbol) -> None:
             break
 
 
-def fill_interest(coin: Coin) -> None:
-    client = ByBitClient()
+def fill_interest(
+    client: ByBitClient,
+    coin: Coin
+) -> None:
     now = int(time.time() * 1000)
     end_time = now
 

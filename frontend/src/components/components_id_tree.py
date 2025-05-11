@@ -51,3 +51,9 @@ class ComponentsIdTree():
                 "leaf": "basis-trade",
                 "type": "leveraged"
             }
+            SELECT_STABLECOIN_BASIS_TRADE_LEVERAGED = {
+                "leaf": "select-coin",
+                "leaf": "basis-trade",
+                "type": "leveraged",
+                "field": "stablecoin"
+            }

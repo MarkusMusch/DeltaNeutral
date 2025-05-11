@@ -1,7 +1,4 @@
 """ This module contains functions that generate graphs for the funding rates and stable coin interest. """
-from typing import List, Union
-
-import dash_mantine_components as dmc
 import numpy as np
 
 from backend.data_access.crud.crud_funding import read_funding_entries
@@ -18,7 +15,7 @@ def load_data_cumulative_funding(symbol: Symbol = Symbol.BTCUSDT.value):
     Returns:
         dict: A dictionary containing the timestamps and funding rates for the given coin.
     """
-    timestamps_coin, funding_rates_coin = read_funding_entries(Symbol(symbol), num_values=3*365)
+    timestamps_coin, funding_rates_coin = read_funding_entries(Symbol(symbol), num_values=5*3*365)
     linear_return_coin = 100 * np.cumsum(np.array(funding_rates_coin))
     cumulative_return_btc = 100 * (np.cumprod(1 + np.array(funding_rates_coin)) - 1)
 
@@ -51,7 +48,7 @@ def load_data_funding_rates(symbol: Symbol = Symbol.BTCUSDT.value):
     Returns:
         dict: A dictionary containing the timestamps and funding rates for the given coin.
     """
-    timestamps_btc, funding_rates_btc = read_funding_entries(Symbol(symbol), num_values=3*365)
+    timestamps_btc, funding_rates_btc = read_funding_entries(Symbol(symbol), num_values=5*3*365)
 
     title = f"{symbol} Funding Rate"
     

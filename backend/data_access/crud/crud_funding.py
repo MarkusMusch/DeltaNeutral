@@ -1,13 +1,17 @@
 """ This module contains CRUD functions for the funding rate data. """
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import numpy as np
 from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
+import logging
 
 from backend.config import Session
 from backend.models.models_orm import FundingRate, Symbol
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def create_funding_entries(funding_rate_record: FundingRate) -> None:
     """Create a new funding rate record in the database.
@@ -19,8 +23,9 @@ def create_funding_entries(funding_rate_record: FundingRate) -> None:
         try:
             session.merge(funding_rate_record)
             session.commit()
+            logger.info("Funding rate record added successfully: %s", funding_rate_record)
         except Exception as e:
-            print(f"An error occurred while adding funding rate record: {e}")
+            logger.error("An error occurred while adding funding rate record: %s", e)
             session.rollback()
 
 
@@ -43,20 +48,20 @@ def read_funding_entries(symbol: Symbol, num_values: Optional[int] = None) -> Tu
                     .limit(num_values)
                     .all()
             )
-
-        timestamps = np.array([rate.funding_rate_timestamp for rate in funding_rates])[::-1]
-        funding_rates_values = np.array([float(rate.funding_rate) for rate in funding_rates])[::-1]
+            logger.info("Funding rate records fetched successfully for symbol %s", symbol.value)
         
-        return timestamps, funding_rates_values
+        timestamps = np.array([entry.funding_rate_timestamp for entry in funding_rates])[::-1]
+        funding_rate_values = np.array([entry.funding_rate for entry in funding_rates])[::-1]
+        return timestamps, funding_rate_values
     except SQLAlchemyError as e:
-        print(f"Database error occurred while reading Funding Rate data: {e}")
+        logger.error("Database error occurred while reading Funding Rate data: %s", e)
         raise
     except Exception as e:
-        print(f"Unexpected error while reading Funding Rate data: {e}")
+        logger.error("Unexpected error while reading Funding Rate data: %s", e)
         raise
 
 
-def read_most_recent_update_funding(symbol: Symbol) -> str:
+def read_most_recent_update_funding(symbol: Symbol) -> Union[str, None]:
     """Read the date of the most recent funding rate update from the database.
 
     Args:
@@ -73,13 +78,17 @@ def read_most_recent_update_funding(symbol: Symbol) -> str:
                     .order_by(desc(FundingRate.funding_rate_timestamp))
                     .first()
             )
+
+        if latest_entry is None:
+            logger.info("No funding rate data found for coin %s", symbol.value)
+            return None
             
         date_time = latest_entry.funding_rate_timestamp
-
+        logger.info("Most recent funding rate update for symbol %s: %s", symbol.value, date_time)
         return date_time
     except SQLAlchemyError as e:
-        print(f"Database error occurred while reading the most recent Funding Rate data timestamp: {e}")
+        logger.error("Database error occurred while reading the most recent Funding Rate data timestamp: %s", e)
         raise
     except Exception as e:
-        print(f"Unexpected error while reading the most recent Funding Rate data timestamp: {e}")
+        logger.error("Unexpected error while reading the most recent Funding Rate data timestamp: %s", e)
         raise

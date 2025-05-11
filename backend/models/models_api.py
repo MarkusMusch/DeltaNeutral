@@ -11,10 +11,12 @@ class FundingRequest(BaseModel):
     symbol: str
     endTime: int
 
+
 class FundingRateItem(BaseModel):
     """A Pydantic model for a single funding rate item."""
     fundingRate: str
     fundingRateTimestamp: str
+
 
 class FundingHistoryResponse(BaseModel):
     """A Pydantic model for the funding history response."""
@@ -44,10 +46,12 @@ class OpenInterestRequest(BaseModel):
     intervalTime: str
     endTime: int
 
+
 class OpenInterestItem(BaseModel):
     """A Pydantic model for a single open interest item."""
     openInterest: str
     timestamp: str
+
 
 class OpenInterestResponse(BaseModel):
     """A Pydantic model for the open interest response."""
@@ -59,6 +63,7 @@ class InterestRateItem(BaseModel):
     """A Pydantic model for a single interest rate item."""
     hourlyBorrowRate: str
     timestamp: int
+
 
 class InterestRateResponse(BaseModel):
     """A Pydantic model for the interest rate response."""

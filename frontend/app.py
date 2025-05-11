@@ -4,7 +4,18 @@ from dash_iconify import DashIconify
 import dash_mantine_components as dmc
 from sqlalchemy import create_engine
 
-from backend.services.download_data import catch_latest_funding, catch_latest_open_interest, catch_latest_interest
+from backend.data_access.api_client.bybit_client import ByBitClient
+from backend.data_access.crud.crud_funding import read_most_recent_update_funding
+from backend.data_access.crud.crud_interest import read_most_recent_update_interest
+from backend.data_access.crud.crud_open_interest import read_most_recent_update_open_interest
+from backend.services.download_data import (
+    catch_latest_funding,
+    catch_latest_open_interest,
+    catch_latest_interest,
+    fill_funding,
+    fill_interest,
+    fill_open_interest
+)
 from backend.models.models_orm import Base, Coin, Symbol
 from frontend.settings import frontend_settings
 # This is not explicitly used but needs to be imported to make the callabacks knwon to the app
@@ -17,14 +28,53 @@ engine = create_engine('sqlite:///funding_history.db')
 Base.metadata.create_all(engine)
 
 
+client = ByBitClient()
+
 for symbol in Symbol:
 
-    catch_latest_funding(symbol)
-    catch_latest_open_interest(symbol)
+    most_recent_funding = read_most_recent_update_funding(symbol)
+
+    if most_recent_funding is not None:
+        catch_latest_funding(
+            client,
+            symbol,
+            most_recent_funding
+        )
+    else:
+        fill_funding(
+            client,
+            symbol
+        )
+    
+    most_recent_oi = read_most_recent_update_open_interest(symbol)
+
+    if most_recent_oi is not None:
+        catch_latest_open_interest(
+            client,
+            symbol,
+            most_recent_oi
+        )
+    else:
+        fill_open_interest(
+            client,
+            symbol
+        )
 
 for coin in Coin:
 
-    catch_latest_interest(coin)
+    most_recent_datetime = read_most_recent_update_interest(coin)
+    
+    if most_recent_datetime is not None:
+        catch_latest_interest(
+            client,
+            coin,
+            most_recent_datetime
+        )
+    else:
+        fill_interest(
+            client,
+            coin
+        )
 
 
 _dash_renderer._set_react_version("18.2.0")
